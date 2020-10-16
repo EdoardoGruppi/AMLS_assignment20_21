@@ -56,10 +56,9 @@ valid_batches = image_generator.flow_from_dataframe(dataframe=train_celebA_label
                                                     x_col="img_name", y_col="gender", subset="validation",
                                                     batch_size=batches_size, seed=42, shuffle=True, classes=['-1', '1'],
                                                     target_size=(178, 218))
-test_batches = image_generator.flow_from_dataframe(dataframe=train_celebA_labels, directory="./Datasets/celeba/img",
-                                                   x_col="img_name", y_col="gender", subset="validation",
-                                                   batch_size=batches_size, seed=42, shuffle=True, classes=['-1', '1'],
-                                                   target_size=(178, 218))
+test_batches = image_generator.flow_from_dataframe(dataframe=test_celebA_labels, directory="./Datasets/celeba_test/img",
+                                                   x_col="img_name", y_col="gender", batch_size=batches_size,
+                                                   shuffle=False, classes=['-1', '1'], target_size=(178, 218))
 
 # # todo [delete all the paragraph] Visualize the data
 # def plot_images(images_arr):
@@ -74,3 +73,11 @@ test_batches = image_generator.flow_from_dataframe(dataframe=train_celebA_labels
 # plot_images(images)
 # print(labels[0:10])
 
+# todo make from scratch the network
+# parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
+# is a infinitely repeating dataset
+model = Sequential([
+
+])
+# model.summary()
+model.compile()
