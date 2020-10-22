@@ -1,3 +1,14 @@
+# todo data_preprocessing must be shifted from the folder A1
+from A1.a1 import data_preprocessing
+# Data preprocessing
+# todo change output
+data_train, data_val, data_test = data_preprocessing(data_directory='celeba', filename_column='img_name',
+                                                     target_column='gender', training_percentage_size=0.8,
+                                                     batches_size=10, validation_split=0.25)
+
+
+
+
 #
 # # ======================================================================================================================
 # # Data preprocessing
