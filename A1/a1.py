@@ -6,7 +6,7 @@ from pathlib import Path
 import shutil
 import os
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Activation, Conv2D
+from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, LeakyReLU
 from tensorflow.keras import regularizers, optimizers
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -68,12 +68,12 @@ class A1:
         # parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
         # is a infinitely repeating dataset
         self.model = Sequential([
-            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
-            Flatten(),
-            Dense(units=2, activation='softmax')
+			Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
+			MaxPooling2D(pool_size=(2, 2), strides=2),
+			Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
+			MaxPooling2D(pool_size=(2, 2), strides=2),
+			Flatten(),
+			Dense(units=2, activation='softmax')
         ])
         self.model.summary()
         # Using a binary_crossentropy we would obtain one output, rather than two
@@ -114,6 +114,5 @@ class A1:
 
     # todo remove this function
     def evaluate(self, test_batches, verbose=1):
-        true_labels = np.array(test_batches.classes)
         score = self.model.evaluate(x=test_batches, verbose=verbose)
         print(score)

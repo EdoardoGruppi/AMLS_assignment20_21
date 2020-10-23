@@ -3,22 +3,27 @@
 [Project](https://link.com/)
 
 Some useful comment for ReadMe writing: 
-
 It's very easy to `make` some words **bold**, *italic* and ...with Markdown [link to .md writing guide!](https://guides.github.com/features/mastering-markdown/)
-
 > If it is possible insert a descriptive image for each section
 
-## Setup
-### Packages required (or Prerequisites)
-### Software used (optional)
+
+## Before starting
+### Packages required 
+### Software used 
 ### Role of each file
-### Getting started (optional)
+>main.py
 
-## Datasets (optional)
-## Model (optional)
-## Setup Training and Test data (optional)
+>a1.py
 
-## Citation (optional)
+>a2.py
+
+>b1.py
+
+>b2.py
+
+## How to start
+A comprehensive guide is provided in the file [Instruction.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md).
+## References 
 ```
 @article{citation-example,
   title={Image-to-Image Translation},
