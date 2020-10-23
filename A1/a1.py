@@ -15,7 +15,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from tensorflow.keras.callbacks import TensorBoard
 
 
-# todo move Data preprocessing
+# todo move Data preprocessing or Data preparation
 # data_train, data_val, data_test = data_preprocessing(args...)
 def data_preprocessing(data_directory, filename_column, target_column, training_percentage_size=0.8, batches_size=10,
                        validation_split=0.25):
@@ -24,7 +24,6 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     path = './Datasets/{}'.format(data_directory)
     dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')
     num_examples = dataset_labels.shape[0]
-
     # Divide data in two sets: one for training and one for testing
     # Division will be made only once for both the tasks (A1 and A2) assigned on the Dataset
     # [DELETE] The following operations useful only if the dataset are not already divided in the test and training
@@ -66,7 +65,6 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
 
 class A1:
     def __init__(self, input_shape):
-        # todo make from scratch the network
         # parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
         # is a infinitely repeating dataset
         self.model = Sequential([
@@ -85,15 +83,16 @@ class A1:
 
     def train(self, training_batches, valid_batches, epochs=10, verbose=2):
         # Training phase
-        self.model.fit(x=training_batches,
-                       steps_per_epoch=len(training_batches),
-                       validation_data=valid_batches,
-                       validation_steps=len(valid_batches),
-                       epochs=epochs,
-                       verbose=verbose,
-                       # callbacks=[tensorboard_callback]
-                       )
-        # todo return accuracy on the train and validation dataset
+        history = self.model.fit(x=training_batches,
+                                 steps_per_epoch=len(training_batches),
+                                 validation_data=valid_batches,
+                                 validation_steps=len(valid_batches),
+                                 epochs=epochs,
+                                 verbose=verbose,
+                                 # callbacks=[tensorboard_callback]
+                                 )
+        # return accuracy on the train and validation dataset
+        return history.history['val_accuracy'][-1]
 
     def test(self, test_batches, verbose=1, confusion_mesh=False):
         # steps parameter indicates on how many batches are necessary to work on each data on the Testing dataset
@@ -101,16 +100,20 @@ class A1:
         predictions = np.round(predictions)
         predicted_labels = np.array(np.argmax(predictions, axis=-1))
         true_labels = np.array(test_batches.classes)
-        print(accuracy_score(true_labels, predicted_labels))
         if confusion_mesh:
             confusion_grid = pd.crosstab(true_labels, predicted_labels, normalize=True)
             # Generate a custom diverging colormap
             color_map = sn.diverging_palette(355, 250, as_cmap=True)
-            # todo if use the same model change labels on graphs
             sn.heatmap(confusion_grid, cmap=color_map, vmax=0.5, vmin=0, center=0, xticklabels=['Female', 'Male'],
                        yticklabels=['Female', 'Male'], square=True, linewidths=2, cbar_kws={"shrink": .5}, annot=True)
             plt.xlabel('Predicted labels')
             plt.ylabel('True labels')
             plt.show()
-            # todo return accuracy on the train and validation dataset
-            # return test_Accuracy
+            # return accuracy on the test dataset
+            return accuracy_score(true_labels, predicted_labels)
+
+    # todo remove this function
+    def evaluate(self, test_batches, verbose=1):
+        true_labels = np.array(test_batches.classes)
+        score = self.model.evaluate(x=test_batches, verbose=verbose)
+        print(score)
