@@ -12,6 +12,14 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 ## How to compile
 
 ## Dataset Preparation
+### CelebA dataset
+Group  | Gender  | Smiling
+------ | ------- |--------
+1°     | 2500    | 2500
+2°     | 2500    | 2500
+The random algorithm in  `data_processing()` allows to achieve a fair division in both training and 
+test dataset.
+### Cartoon_set dataset
 
 ## Data Processing
 
