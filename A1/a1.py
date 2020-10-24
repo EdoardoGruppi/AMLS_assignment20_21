@@ -1,5 +1,6 @@
 # todo reduce imports as much as possible like import seaborn to from seaborn import...
 # Import packages
+from comet_ml import Experiment
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -82,8 +83,12 @@ class A1:
         self.model.summary()
         # Using a binary_crossentropy we would obtain one output, rather than two
         # In that case the activation of the last layer must be a 'sigmoid'
+        # Alternatively it is possible to use for instance a categorical_crossentropy with a softmax in the last layer
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
+
+        experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="covolutional-neural-network",
+                                workspace="edoardogruppi")
 
     def train(self, training_batches, valid_batches, epochs=10, verbose=2):
         # Training phase
@@ -92,8 +97,7 @@ class A1:
                                  validation_data=valid_batches,
                                  validation_steps=len(valid_batches),
                                  epochs=epochs,
-                                 verbose=verbose,
-                                 # callbacks=[tensorboard_callback]
+                                 verbose=verbose
                                  )
         # return accuracy on the train and validation dataset
         return history.history['val_accuracy'][-1]
@@ -120,4 +124,3 @@ class A1:
     def evaluate(self, test_batches, verbose=1):
         score = self.model.evaluate(x=test_batches, verbose=verbose)
         print(score)
-
