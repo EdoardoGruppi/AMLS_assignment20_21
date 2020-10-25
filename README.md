@@ -1,29 +1,42 @@
-
 # Description of the project
+
 [Project](https://link.com/)
 
-Some useful comment for ReadMe writing: 
-It's very easy to `make` some words **bold**, *italic* and ...with Markdown [link to .md writing guide!](https://guides.github.com/features/mastering-markdown/)
+Some useful comment for ReadMe writing:
+It's very easy to `make` some words **bold**, _italic_ and ...with Markdown [link to .md writing guide!](https://guides.github.com/features/mastering-markdown/)
+
 > If it is possible insert a descriptive image for each section
 
-
 ## Before starting
-### Packages required 
-### Software used 
+
+### Packages required
+
+### Software used
+
+> pycharm
+
+> comet_ml
+
+> colab
+
 ### Role of each file
->main.py
 
->a1.py
+> main.py
 
->a2.py
+> a1.py
 
->b1.py
+> a2.py
 
->b2.py
+> b1.py
+
+> b2.py
 
 ## How to start
+
 A comprehensive guide is provided in the file [Instruction.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md).
-## References 
+
+## References
+
 ```
 @article{citation-example,
   title={Image-to-Image Translation},

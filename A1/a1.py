@@ -73,18 +73,24 @@ class A1:
         # parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
         # is a infinitely repeating dataset
         self.model = Sequential([
-            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
+            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
+            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
+            MaxPooling2D(pool_size=(2, 2), strides=2),
+            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
+            MaxPooling2D(pool_size=(2, 2), strides=2),
+            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Flatten(),
-            Dense(units=2, activation='softmax')
+            Dropout(rate=0.5),
+            Dense(units=2, activation='sigmoid')
         ])
         self.model.summary()
         # Using a binary_crossentropy we would obtain one output, rather than two
         # In that case the activation of the last layer must be a 'sigmoid'
         # Alternatively it is possible to use for instance a categorical_crossentropy with a softmax in the last layer
-        self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
+        self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='binary_crossentropy',
                            metrics=['accuracy'])
 
         experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="covolutional-neural-network",
@@ -118,7 +124,7 @@ class A1:
             plt.ylabel('True labels')
             plt.show()
             # return accuracy on the test dataset
-            return accuracy_score(true_labels, predicted_labels)
+        return accuracy_score(true_labels, predicted_labels)
 
     # todo remove this function
     def evaluate(self, test_batches, verbose=1):
