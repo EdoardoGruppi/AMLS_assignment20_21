@@ -9,34 +9,35 @@ Short description of the project
 ### Packages required
 
 The following lists gather all the packages needed to run the project code.
-Please note that all the package descriptions provided are taken directly from their source pages. In order to have more details on them it is reccomended to directly reference to their official sites.
+Please note that the descriptions provided in this subsection are taken directly from the package source pages. In order to have more details on them it is reccomended to directly reference to their official sites.
 
-> Compulsory
+Compulsory
 
-`Pandas` provides fast, flexible, and expressive data structures designed to make working with structured and time series data both easy and intuitive.
+- `Pandas` provides fast, flexible, and expressive data structures designed to make working with structured and time series data both easy and intuitive.
 
-`Numpy` is the fundamental package for array computing with Python.
+- `Numpy` is the fundamental package for array computing with Python.
 
-`Tensorflow ` is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs).
-**Important**: Keras has been completely packaged within it.
+- `Tensorflow ` is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs).
 
-`Pathlib ` offers a set of classes to handle filesystem paths.
+  **Important**: Recently Keras has been completely wrapped within Tensorflow.
 
-`Shutil` provides a number of high-level operations on files and collections of files. In particular, functions are provided which support file copying and removal.
+- `Pathlib ` offers a set of classes to handle filesystem paths.
 
-`Os` provides a portable way of using operating system dependent functionality.
+- `Shutil` provides a number of high-level operations on files and collections of files. In particular, functions are provided which support file copying and removal.
 
-`Matplotlib` is a comprehensive library for creating static, animated, and interactive visualizations in Python.
+- `Os` provides a portable way of using operating system dependent functionality.
 
-`Sklearn` offers simple and efficient tools for predictive data analysis.
+- `Matplotlib` is a comprehensive library for creating static, animated, and interactive visualizations in Python.
 
-`Random ` implements pseudo-random number generators for various distributions.
+- `Sklearn` offers simple and efficient tools for predictive data analysis.
 
-> Optional
+- `Random ` implements pseudo-random number generators for various distributions.
 
-`seaborn` is a data visualization library based on matplotlib that provides a high-level interface for drawing attractive and informative statistical graphics.
+Optional
 
-`comet_ml` helps to manage and track machine learning experiments.
+- `seaborn` is a data visualization library based on matplotlib that provides a high-level interface for drawing attractive and informative statistical graphics.
+
+- `comet_ml` helps to manage and track machine learning experiments.
 
 ### Software used
 
