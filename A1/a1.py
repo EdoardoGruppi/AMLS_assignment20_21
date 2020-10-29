@@ -7,13 +7,12 @@ from pathlib import Path
 import shutil
 import os
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, LeakyReLU
+from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, Activation
 from tensorflow.keras import optimizers
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sn
 from sklearn.metrics import accuracy_score
-from tensorflow.keras.callbacks import TensorBoard
 from random import sample
 
 
@@ -51,13 +50,15 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     # todo Before we have to do some image preprocessing (for A1 and/or A2)
     training_labels = dataset_labels.iloc[[i for i in range(0, num_examples) if i not in random_test_list]]
     test_labels = dataset_labels.iloc[[i for i in random_test_list]]
-    image_generator = ImageDataGenerator(rescale=1. / 255., validation_split=validation_split)
+    image_generator = ImageDataGenerator(rescale=1. / 255., validation_split=validation_split,
+                                         horizontal_flip=True)
     # image_generator.flow_from_dataframe() is a directory iterator.
     # It produces batches of images everytime it is required
     training_batches = image_generator.flow_from_dataframe(dataframe=training_labels, directory=training_dir,
                                                            x_col=filename_column, y_col=target_column,
                                                            subset="training", batch_size=batches_size, seed=42,
                                                            shuffle=True, target_size=img_size)
+    image_generator = ImageDataGenerator(rescale=1. / 255., validation_split=validation_split)
     valid_batches = image_generator.flow_from_dataframe(dataframe=training_labels, directory=training_dir,
                                                         x_col=filename_column, y_col=target_column, subset="validation",
                                                         batch_size=batches_size, seed=42, shuffle=True,
@@ -74,27 +75,33 @@ class A1:
         # is a infinitely repeating dataset
         self.model = Sequential([
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
-            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
+            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
+            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
             Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
+            Conv2D(filters=64, kernel_size=(3, 3), padding='same'),
+            BatchNormalization(),
+            Activation('relu'),
+            MaxPooling2D(pool_size=(2, 2), strides=2),
             Flatten(),
             Dropout(rate=0.5),
-            Dense(units=2, activation='sigmoid')
+            Dense(units=2, activation='softmax')
         ])
         self.model.summary()
-        # Using a binary_crossentropy we would obtain one output, rather than two
+        # Using a 'binary_crossentropy' we would obtain one output, rather than two
         # In that case the activation of the last layer must be a 'sigmoid'
-        # Alternatively it is possible to use for instance a categorical_crossentropy with a softmax in the last layer
-        self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='binary_crossentropy',
+        # Alternatively it is possible to use a 'categorical_crossentropy' with a 'softmax' in the last layer
+        # In that case it is compulsory to insert class_mode='binary' in flow_from_dataframe() functions ...
+        # And to insert predicted_labels = np.array(predictions).astype(int).flatten() instead of...
+        # ...predicted_labels = np.array(np.argmax(predictions, axis=-1))
+        self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
 
-        experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="covolutional-neural-network",
-                                workspace="edoardogruppi")
+        self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
+                                     workspace="edoardogruppi")
 
     def train(self, training_batches, valid_batches, epochs=10, verbose=2):
         # Training phase
@@ -123,7 +130,9 @@ class A1:
             plt.xlabel('Predicted labels')
             plt.ylabel('True labels')
             plt.show()
-            # return accuracy on the test dataset
+        self.experiment.log_confusion_matrix(true_labels, predicted_labels)
+        self.experiment.end()
+        # return accuracy on the test dataset
         return accuracy_score(true_labels, predicted_labels)
 
     # todo remove this function

@@ -17,9 +17,7 @@ Compulsory
 
 - `Numpy` is the fundamental package for array computing with Python.
 
-- `Tensorflow ` is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs).
-
-  **Important**: Recently Keras has been completely wrapped within Tensorflow.
+- `Tensorflow ` is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs). **Important**: Recently Keras has been completely wrapped within Tensorflow.
 
 - `Pathlib ` offers a set of classes to handle filesystem paths.
 
