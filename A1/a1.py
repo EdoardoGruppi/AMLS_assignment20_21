@@ -12,7 +12,7 @@ from tensorflow.keras import optimizers
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sn
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 from random import sample
 
 
@@ -27,7 +27,7 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     num_examples = dataset_labels.shape[0]
     # Divide data in two sets: one for training and one for testing
     # Division will be made only once for both the tasks (A1 and A2) assigned on the Dataset
-    # [DELETE] The following operations useful only if the dataset are not already divided in the test and training
+    # [DELETE] The lines below are useful only if the datasets has not already been divided between test and training
     # Create the Test dataset folder
     Path('{}_test/img'.format(path)).mkdir(parents=True, exist_ok=True)
     # Compute the numbers of examples reserved for the training Dataset
@@ -71,7 +71,7 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
 
 class A1:
     def __init__(self, input_shape):
-        # parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
+        # Parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
         # is a infinitely repeating dataset
         self.model = Sequential([
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
@@ -95,7 +95,7 @@ class A1:
         # In that case the activation of the last layer must be a 'sigmoid'
         # Alternatively it is possible to use a 'categorical_crossentropy' with a 'softmax' in the last layer
         # In that case it is compulsory to insert class_mode='binary' in flow_from_dataframe() functions ...
-        # And to insert predicted_labels = np.array(predictions).astype(int).flatten() instead of...
+        # ...and predicted_labels = np.array(predictions).astype(int).flatten() instead of...
         # ...predicted_labels = np.array(np.argmax(predictions, axis=-1))
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
@@ -112,11 +112,12 @@ class A1:
                                  epochs=epochs,
                                  verbose=verbose
                                  )
-        # return accuracy on the train and validation dataset
+        # Return accuracy on the train and validation dataset
         return history.history['val_accuracy'][-1]
 
     def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels=True):
-        # steps parameter indicates on how many batches are necessary to work on each data on the Testing dataset
+        # Steps parameter indicates on how many batches are necessary to work on each data on the Testing dataset
+        # model.predict returns the predictions made on the input
         predictions = self.model.predict(x=test_batches, steps=len(test_batches), verbose=verbose)
         predictions = np.round(predictions)
         predicted_labels = np.array(np.argmax(predictions, axis=-1))
@@ -130,12 +131,13 @@ class A1:
             plt.xlabel('Predicted labels')
             plt.ylabel('True labels')
             plt.show()
+        print(classification_report(true_labels, predicted_labels)) 
         self.experiment.log_confusion_matrix(true_labels, predicted_labels)
         self.experiment.end()
-        # return accuracy on the test dataset
+        # Return accuracy on the test dataset
         return accuracy_score(true_labels, predicted_labels)
 
-    # todo remove this function
     def evaluate(self, test_batches, verbose=1):
+        # model.evaluate predicts the output and returns the metrics function specified in model.compile()
         score = self.model.evaluate(x=test_batches, verbose=verbose)
         print(score)
