@@ -29,16 +29,29 @@ python test.py
 
 ### CelebA dataset
 The CelebA dataset provided contains 5000 celebrity images. Each one of them is associated 
-to two labels that describe if the celebrity gender and whether they are smiling. 
+to two labels that describe the celebrity gender and whether they are smiling. 
 
-The table below depicts how equally the two categories for each label are divided.
+The table below depicts how the two categories for each label are divided.
 
-| Group | Gender | Smiling |
+| Class | Gender | Smiling |
 | ----- | ------ | ------- |
-| 1°    | 2500   | 2500    |
-| 2°    | 2500   | 2500    |
+| -1    | 2500   | 2500    |
+|  1    | 2500   | 2500    |
 
 ### Cartoon_set dataset
+Cartoon_set dataset is made up of 10000 avatar images. They are obtained by choosing 
+randomly the avatar traits between 10 artworks, 4 colors and 4 proportions. 
+
+The following table summarizes how the examples are distributed amongst the five 
+possibilities for both: eye color and face shape.
+
+| Class   | Eye color | Face shape |
+| ------- | --------- | ---------- |
+| 0       | 2004      | 2000       |
+| 1       | 2018      | 2000       |
+| 2       | 1969      | 2000       |
+| 3       | 1992      | 2000       |
+| 4       | 2017      | 2000       |
 
 ### Dataset division
 

@@ -82,11 +82,11 @@ class A1:
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=64, kernel_size=(3, 3), padding='same'),
+            Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             BatchNormalization(),
-            Activation('relu'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Flatten(),
+            # Fraction of the input units dropped
             Dropout(rate=0.5),
             Dense(units=2, activation='softmax')
         ])
@@ -115,7 +115,7 @@ class A1:
         # Return accuracy on the train and validation dataset
         return history.history['val_accuracy'][-1]
 
-    def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels=True):
+    def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels=None):
         # Steps parameter indicates on how many batches are necessary to work on each data on the Testing dataset
         # model.predict returns the predictions made on the input
         predictions = self.model.predict(x=test_batches, steps=len(test_batches), verbose=verbose)
