@@ -100,7 +100,7 @@ class A1:
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
 
-        self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
+        self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convneta1",
                                      workspace="edoardogruppi")
 
     def train(self, training_batches, valid_batches, epochs=10, verbose=2):
