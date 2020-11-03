@@ -5,6 +5,7 @@ from comet_ml import Experiment
 import pandas as pd
 import numpy as np
 import os
+import shutil
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, Activation
 from tensorflow.keras import optimizers
@@ -12,6 +13,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sn
 from sklearn.metrics import accuracy_score, classification_report
+from pathlib import Path
 
 
 def delete_glasses(dataset_name):
@@ -29,9 +31,13 @@ def delete_glasses(dataset_name):
     images_to_delete = np.array(np.where(predicted_labels == 1)).flatten()
     print('\nFROM TRAINING DIRECTORY: ')
     print('There are {} to delete.'.format(len(images_to_delete)))
+    # todo remove next line
+    Path('./Datasets/{}_removed'.format(dataset_name)).mkdir(parents=True, exist_ok=True)
     for i in images_to_delete:
         print('Image deleted: ' + files[i])
-        os.remove(os.path.join(training_dir, files[i]))
+        # todo remove next line
+        shutil.move(os.path.join(training_dir, files[i]), './Datasets/{}_removed'.format(dataset_name))
+        # os.remove(os.path.join(training_dir, files[i]))
     # # Avatar with black glasses to delete in test directory
     test_dir = './Datasets/{}_test/img'.format(dataset_name)
     files = os.listdir(test_dir)
@@ -46,7 +52,9 @@ def delete_glasses(dataset_name):
     print('There are {} to delete.'.format(len(images_to_delete)))
     for i in images_to_delete:
         print('Image deleted: ' + files[i])
-        os.remove(os.path.join(test_dir, files[i]))
+        # todo remove next line
+        shutil.move(os.path.join(test_dir, files[i]), './Datasets/{}_removed'.format(dataset_name))
+        # os.remove(os.path.join(test_dir, files[i]))
 
 
 class B2:

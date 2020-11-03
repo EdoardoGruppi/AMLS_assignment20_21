@@ -26,9 +26,10 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')
     num_examples = dataset_labels.shape[0]
     # Divide data in two sets: one for training and one for testing
-    # Division will be made only once for both the tasks (A1 and A2) assigned on the Dataset
     # [DELETE] The lines below are useful only if the datasets has not already been divided between test and training
     # Create the Test dataset folder
+    # If parents is True, any missing parents of the folder will be created
+    # If exist_ok is True, an Error is raised if the directory already exists
     Path('{}_test/img'.format(path)).mkdir(parents=True, exist_ok=True)
     # Compute the numbers of examples reserved for the training Dataset
     training_dir = '{}/img'.format(path)
@@ -38,6 +39,7 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     # Images shape is expected to be the same for each one of them
     # img_size must have only the first two dimensions. By default the third dimension is equal to 3
     img_size = plt.imread(os.path.join(training_dir, files[0])).shape[:2][::-1]
+    # Division will be made only once for both the tasks (A1 and A2) assigned on the Dataset
     # If num_examples != len(files) the dataset division has been already accomplished
     if num_examples == len(files):
         random_test_list = sorted(sample(range(0, num_examples), round(num_examples * (1 - training_percentage_size))))
@@ -100,7 +102,7 @@ class A1:
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
 
-        self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convneta1",
+        self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
                                      workspace="edoardogruppi")
 
     def train(self, training_batches, valid_batches, epochs=10, verbose=2):
