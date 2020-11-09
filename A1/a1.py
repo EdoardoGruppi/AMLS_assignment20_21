@@ -14,44 +14,49 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sn
 from sklearn.metrics import accuracy_score, classification_report
 from random import sample
+# todo where to insert it? a1.py?
+from face_extraction import faces_recognition
 
 
-# todo move Data preprocessing or Data preparation
-# data_train, data_val, data_test = data_preprocessing(args...)
 def data_preprocessing(data_directory, filename_column, target_column, training_percentage_size=0.8, batches_size=10,
-                       validation_split=0.25):
+                       validation_split=0.25, img_size=(100, 100), face_extraction=False, color_mode='grayscale'):
     # Loading the csv file
     # The sep parameter chosen according to the delimiter adopted in labels.csv
     path = './Datasets/{}'.format(data_directory)
     dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')
     num_examples = dataset_labels.shape[0]
+    if face_extraction:
+        num_examples, faces_not_detected = faces_recognition(data_directory)
+    path = '{}_face_rec'.format(path)
     # Divide data in two sets: one for training and one for testing
     # [DELETE] The lines below are useful only if the datasets has not already been divided between test and training
     # Create the Test dataset folder
-    # If parents is True, any missing parents of the folder will be created
-    # If exist_ok is True, an Error is raised if the directory already exists
-    Path('{}_test/img'.format(path)).mkdir(parents=True, exist_ok=True)
-    # Compute the numbers of examples reserved for the training Dataset
     training_dir = '{}/img'.format(path)
     test_dir = '{}_test/img'.format(path)
+    # todo Put lines below inside the if?
+    # If parents is True, any missing parents of the folder will be created
+    # If exist_ok is True, an Error is raised if the directory already exists
+    Path(test_dir).mkdir(parents=True, exist_ok=True)
     # List of all the images available
     files = sorted(os.listdir(training_dir), key=lambda x: int(x.split(".")[0]))
-    # Images shape is expected to be the same for each one of them
-    # img_size must have only the first two dimensions. By default the third dimension is equal to 3
-    img_size = plt.imread(os.path.join(training_dir, files[0])).shape[:2][::-1]
     # Division will be made only once for both the tasks (A1 and A2) assigned on the Dataset
     # If num_examples != len(files) the dataset division has been already accomplished
     if num_examples == len(files):
-        random_test_list = sorted(sample(range(0, num_examples), round(num_examples * (1 - training_percentage_size))))
-        for index in random_test_list:
-            shutil.move(os.path.join(training_dir, files[index]), test_dir)
-    else:
-        random_test_list = sorted([dataset_labels[dataset_labels[filename_column] == i].index[0]
-                                   for i in os.listdir(test_dir)])
+        images_detected = sorted(sample(files, round(num_examples * (1 - training_percentage_size))))
+        for file in images_detected:
+            shutil.move(os.path.join(training_dir, file), test_dir)
 
-    # todo Before we have to do some image preprocessing (for A1 and/or A2)
-    training_labels = dataset_labels.iloc[[i for i in range(0, num_examples) if i not in random_test_list]]
+    random_test_list = sorted([dataset_labels[dataset_labels[filename_column] == i].index[0]
+                               for i in os.listdir(test_dir)])
+    random_training_list = sorted([dataset_labels[dataset_labels[filename_column] == i].index[0]
+                                   for i in os.listdir(training_dir)])
+
+    # Prepare the training, test and validation batches
+    training_labels = dataset_labels.iloc[[i for i in random_training_list]]
     test_labels = dataset_labels.iloc[[i for i in random_test_list]]
+    # With the following line the validation_split passed as argument corresponds to the percentage of the total
+    # dataset (and not anymore to the percentage of the training dataset) dedicated to the validation dataset
+    validation_split = validation_split / training_percentage_size
     image_generator = ImageDataGenerator(rescale=1. / 255., validation_split=validation_split,
                                          horizontal_flip=True)
     # image_generator.flow_from_dataframe() is a directory iterator.
@@ -59,15 +64,16 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     training_batches = image_generator.flow_from_dataframe(dataframe=training_labels, directory=training_dir,
                                                            x_col=filename_column, y_col=target_column,
                                                            subset="training", batch_size=batches_size, seed=42,
-                                                           shuffle=True, target_size=img_size)
+                                                           color_mode=color_mode, shuffle=True, target_size=img_size)
     image_generator = ImageDataGenerator(rescale=1. / 255., validation_split=validation_split)
     valid_batches = image_generator.flow_from_dataframe(dataframe=training_labels, directory=training_dir,
                                                         x_col=filename_column, y_col=target_column, subset="validation",
                                                         batch_size=batches_size, seed=42, shuffle=True,
-                                                        target_size=img_size)
+                                                        color_mode=color_mode, target_size=img_size)
     test_batches = image_generator.flow_from_dataframe(dataframe=test_labels, directory=test_dir,
                                                        x_col=filename_column, y_col=target_column,
-                                                       batch_size=batches_size, shuffle=False, target_size=img_size)
+                                                       color_mode=color_mode, batch_size=batches_size,
+                                                       shuffle=False, target_size=img_size)
     return training_batches, valid_batches, test_batches
 
 
@@ -105,7 +111,7 @@ class A1:
         self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
                                      workspace="edoardogruppi")
 
-    def train(self, training_batches, valid_batches, epochs=10, verbose=2):
+    def train(self, training_batches, valid_batches, epochs=35, verbose=2):
         # Training phase
         history = self.model.fit(x=training_batches,
                                  steps_per_epoch=len(training_batches),
@@ -133,7 +139,7 @@ class A1:
             plt.xlabel('Predicted labels')
             plt.ylabel('True labels')
             plt.show()
-        print(classification_report(true_labels, predicted_labels)) 
+        print(classification_report(true_labels, predicted_labels))
         self.experiment.log_confusion_matrix(true_labels, predicted_labels)
         self.experiment.end()
         # Return accuracy on the test dataset
@@ -143,3 +149,4 @@ class A1:
         # model.evaluate predicts the output and returns the metrics function specified in model.compile()
         score = self.model.evaluate(x=test_batches, verbose=verbose)
         print(score)
+

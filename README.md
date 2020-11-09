@@ -33,11 +33,17 @@ Compulsory
 
 - `Random ` implements pseudo-random number generators for various distributions.
 
+- `cv2 `
+
+- `face_recognition ` cmake
+
 Optional
 
 - `seaborn` is a data visualization library based on matplotlib that provides a high-level interface for drawing attractive and informative statistical graphics.
 
 - `comet_ml` helps to manage and track machine learning experiments.
+
+- `vprof`
 
 ### Software used
 
