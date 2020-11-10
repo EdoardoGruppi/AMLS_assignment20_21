@@ -24,26 +24,25 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     # The sep parameter chosen according to the delimiter adopted in labels.csv
     path = './Datasets/{}'.format(data_directory)
     dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')
-    num_examples = dataset_labels.shape[0]
     if face_extraction:
-        num_examples, faces_not_detected = faces_recognition(data_directory)
-    path = '{}_face_rec'.format(path)
+        num_examples, faces_not_detected = faces_recognition(data_directory, img_size)
+    # todo path only for A tasks? to change
+    # todo path = '{}_face_rec'.format(path)
     # Divide data in two sets: one for training and one for testing
     # [DELETE] The lines below are useful only if the datasets has not already been divided between test and training
     # Create the Test dataset folder
     training_dir = '{}/img'.format(path)
     test_dir = '{}_test/img'.format(path)
-    # todo Put lines below inside the if?
-    # If parents is True, any missing parents of the folder will be created
-    # If exist_ok is True, an Error is raised if the directory already exists
-    Path(test_dir).mkdir(parents=True, exist_ok=True)
-    # List of all the images available
-    files = sorted(os.listdir(training_dir), key=lambda x: int(x.split(".")[0]))
     # Division will be made only once for both the tasks (A1 and A2) assigned on the Dataset
-    # If num_examples != len(files) the dataset division has been already accomplished
-    if num_examples == len(files):
-        images_detected = sorted(sample(files, round(num_examples * (1 - training_percentage_size))))
-        for file in images_detected:
+    if not os.path.isdir(test_dir):
+        # If parents is True, any missing parents of the folder will be created
+        # If exist_ok is True, an Error is raised if the directory already exists
+        Path(test_dir).mkdir(parents=True, exist_ok=True)
+        # List of all the images available
+        files = sorted(os.listdir(training_dir), key=lambda x: int(x.split(".")[0]))
+        # number of examples available on the entire dataset
+        images_testing = sorted(sample(files, round(len(files) * (1 - training_percentage_size))))
+        for file in images_testing:
             shutil.move(os.path.join(training_dir, file), test_dir)
 
     random_test_list = sorted([dataset_labels[dataset_labels[filename_column] == i].index[0]
@@ -107,9 +106,9 @@ class A1:
         # ...predicted_labels = np.array(np.argmax(predictions, axis=-1))
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
-
-        self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
-                                     workspace="edoardogruppi")
+        # todo comet_ml
+        # self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
+        #                              workspace="edoardogruppi")
 
     def train(self, training_batches, valid_batches, epochs=35, verbose=2):
         # Training phase
@@ -140,8 +139,9 @@ class A1:
             plt.ylabel('True labels')
             plt.show()
         print(classification_report(true_labels, predicted_labels))
-        self.experiment.log_confusion_matrix(true_labels, predicted_labels)
-        self.experiment.end()
+        # todo comet_ml
+        # self.experiment.log_confusion_matrix(true_labels, predicted_labels)
+        # self.experiment.end()
         # Return accuracy on the test dataset
         return accuracy_score(true_labels, predicted_labels)
 
@@ -149,4 +149,3 @@ class A1:
         # model.evaluate predicts the output and returns the metrics function specified in model.compile()
         score = self.model.evaluate(x=test_batches, verbose=verbose)
         print(score)
-

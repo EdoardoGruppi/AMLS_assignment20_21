@@ -5,6 +5,7 @@ import os
 from face_recognition import face_locations
 
 
+# todo implement color_mode or let only the gray mode?
 def faces_recognition(data_directory, img_size=(100, 100)):
     # Dataset path
     path = './Datasets/{}'.format(data_directory)
@@ -22,14 +23,14 @@ def faces_recognition(data_directory, img_size=(100, 100)):
         # Load the jpg file into a numpy array
         image = cv2.imread(image_path)
         # convert to gray
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # Find all the faces in the image using a pre-trained convolutional neural network.
         # This method is more accurate than the default HOG model, but it's slower
         # unless you have an nvidia GPU and dlib compiled with CUDA extensions. But if you do,
         # this will use GPU acceleration and perform well.
-        face_places = face_locations(image, number_of_times_to_upsample=0, model="hog")
+        face_places = face_locations(gray, number_of_times_to_upsample=0, model="hog")
         if len(face_places) == 0:
-            face_places = face_locations(image, number_of_times_to_upsample=0, model="cnn")
+            face_places = face_locations(gray, number_of_times_to_upsample=0, model="cnn")
         if len(face_places) == 0:
             cnt += 1
             print("In {0}, {1} face found!!  -------------- counter: {2}".format(file, len(face_places), cnt))
