@@ -17,3 +17,4 @@ haarcascade_frontalface_alt.xml
 haarcascade_frontalface_alt_tree.xml
 faceNet.py
 __pycache__
+models.py

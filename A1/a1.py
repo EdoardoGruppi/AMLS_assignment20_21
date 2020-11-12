@@ -7,27 +7,21 @@ from pathlib import Path
 import shutil
 import os
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, Activation
+from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D
 from tensorflow.keras import optimizers
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sn
 from sklearn.metrics import accuracy_score, classification_report
 from random import sample
-# todo where to insert it? a1.py?
-from face_extraction import faces_recognition
 
 
-def data_preprocessing(data_directory, filename_column, target_column, training_percentage_size=0.8, batches_size=10,
-                       validation_split=0.25, img_size=(100, 100), face_extraction=False, color_mode='grayscale'):
+def data_preprocessing(data_directory, filename_column, target_column, training_percentage_size=0.85, batches_size=16,
+                       validation_split=0.15, img_size=(96, 96), color_mode='rgb'):
     # Loading the csv file
     # The sep parameter chosen according to the delimiter adopted in labels.csv
     path = './Datasets/{}'.format(data_directory)
     dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')
-    if face_extraction:
-        num_examples, faces_not_detected = faces_recognition(data_directory, img_size)
-    # todo path only for A tasks? to change
-    # todo path = '{}_face_rec'.format(path)
     # Divide data in two sets: one for training and one for testing
     # [DELETE] The lines below are useful only if the datasets has not already been divided between test and training
     # Create the Test dataset folder
@@ -84,11 +78,10 @@ class A1:
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
+            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             BatchNormalization(),
             MaxPooling2D(pool_size=(2, 2), strides=2),
@@ -106,7 +99,7 @@ class A1:
         # ...predicted_labels = np.array(np.argmax(predictions, axis=-1))
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
-        # todo comet_ml
+        # # todo comet_ml
         # self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
         #                              workspace="edoardogruppi")
 
@@ -138,8 +131,9 @@ class A1:
             plt.xlabel('Predicted labels')
             plt.ylabel('True labels')
             plt.show()
+        print('\nCLASSIFICATION REPORT:')
         print(classification_report(true_labels, predicted_labels))
-        # todo comet_ml
+        # # todo comet_ml
         # self.experiment.log_confusion_matrix(true_labels, predicted_labels)
         # self.experiment.end()
         # Return accuracy on the test dataset

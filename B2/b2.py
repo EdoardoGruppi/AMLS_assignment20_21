@@ -3,9 +3,6 @@
 from tensorflow.keras import models
 from comet_ml import Experiment
 import pandas as pd
-import numpy as np
-import os
-import shutil
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, Activation
 from tensorflow.keras import optimizers
@@ -13,6 +10,13 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sn
 from sklearn.metrics import accuracy_score, classification_report
+import cv2
+import numpy as np
+import os
+from sklearn.decomposition import PCA
+from skimage.feature import hog
+import joblib
+import shutil
 from pathlib import Path
 
 
@@ -55,6 +59,44 @@ def delete_glasses(dataset_name):
         # todo remove next line
         shutil.move(os.path.join(test_dir, files[i]), './Datasets/{}_removed'.format(dataset_name))
         # os.remove(os.path.join(test_dir, files[i]))
+
+
+def delete_glasses_hog_svm(dataset_name, img_size=(100, 100), n_components=50, orientations=6, pixels_per_cell=(8, 8),
+                           cells_per_block=(5, 5), multichannel=True):
+    # create the original path
+    path = './Datasets/{}/img'.format(dataset_name)
+    files = sorted(os.listdir(path), key=lambda x: int(x.split(".")[0]))
+    feature_list = []
+    pca = PCA(n_components=n_components)
+
+    filename = './B2/finalized_model.sav'
+    loaded_model = joblib.load(filename)
+    Path('./Datasets/{}_removed'.format(dataset_name)).mkdir(parents=True, exist_ok=True)
+    predictions = []
+    counter = 0
+    for file in files:
+        img = cv2.imread(path + '/' + file)
+        img = cv2.resize(img, img_size)
+        hog_feature = hog(img, orientations=orientations, pixels_per_cell=pixels_per_cell,
+                          cells_per_block=cells_per_block, multichannel=multichannel, feature_vector=True)
+        feature_list.append(hog_feature)
+        counter += 1
+        if counter % 600 == 0:
+            pca.fit(feature_list)
+            X = np.array(pca.fit_transform(feature_list))
+            predictions.extend(loaded_model.predict(X))
+            feature_list = []
+            print('{} passed'.format(counter))
+    # todo to change the following and the previous lines
+    pca.fit(feature_list)
+    X = np.array(pca.fit_transform(feature_list))
+    predictions.extend(loaded_model.predict(X))
+    predictions = np.asarray(predictions)
+    images_to_delete = np.array(np.where(predictions == 1)).flatten()
+    for i in images_to_delete:
+        print('Image deleted: ' + files[i])
+        # todo remove next line
+        shutil.move(os.path.join(path, files[i]), './Datasets/{}_removed'.format(dataset_name))
 
 
 class B2:
