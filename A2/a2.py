@@ -1,85 +1,87 @@
-# todo reduce imports as much as possible like import seaborn to from seaborn import...
 # Import packages
-from comet_ml import Experiment
-import pandas as pd
+import cv2
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, Activation
-from tensorflow.keras import optimizers
-import matplotlib.pyplot as plt
-import seaborn as sn
-from sklearn.metrics import accuracy_score, classification_report
+import os
+from sklearn import svm
+from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+from skimage.feature import hog
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 
-class A2:
-    def __init__(self, input_shape):
-        # Parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
-        # is a infinitely repeating dataset
-        self.model = Sequential([
-            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
-            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
-            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
-            Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
-            BatchNormalization(),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
-            Flatten(),
-            # Fraction of the input units dropped
-            Dropout(rate=0.5),
-            Dense(units=2, activation='softmax')
-        ])
-        self.model.summary()
-        # Using a 'binary_crossentropy' we would obtain one output, rather than two
-        # In that case the activation of the last layer must be a 'sigmoid'
-        # Alternatively it is possible to use a 'categorical_crossentropy' with a 'softmax' in the last layer
-        # In that case it is compulsory to insert class_mode='binary' in flow_from_dataframe() functions ...
-        # ...and predicted_labels = np.array(predictions).astype(int).flatten() instead of...
-        # ...predicted_labels = np.array(np.argmax(predictions, axis=-1))
-        self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
-                           metrics=['accuracy'])
-        # # todo comet_ml
-        # self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnet",
-        #                              workspace="edoardogruppi")
+def svm_model(dataset_name, img_size=(96, 48), validation_split=0.15, variance=0.95, multichannel=False,
+              training_size=0.85, target_column='smiling'):
+    # Create path to access to all the images
+    path = './Datasets/{}'.format(dataset_name)
+    images_dir = '{}/img'.format(path)
+    # List all the images within the folder
+    files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
+    dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')[target_column]
+    feature_matrix = []
+    # Counter inserted to display the execution status
+    counter = 0
+    print('\nExtracting features...')
+    for file in files:
+        counter += 1
+        if multichannel:
+            img = cv2.imread(images_dir + '/' + file)
+        else:
+            img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
+        # Resize the image in case it has a different size than the expected
+        img = cv2.resize(img, img_size)
+        hog_feature = hog(img, orientations=6, pixels_per_cell=(8, 8), cells_per_block=(3, 3),
+                          multichannel=multichannel, feature_vector=True)
+        # Append the HOG features vector to the feature map
+        feature_matrix.append(hog_feature)
+        if counter % 1000 == 0:
+            print('Images processed: {}'.format(counter))
 
-    def train(self, training_batches, valid_batches, epochs=35, verbose=2):
-        # Training phase
-        history = self.model.fit(x=training_batches,
-                                 steps_per_epoch=len(training_batches),
-                                 validation_data=valid_batches,
-                                 validation_steps=len(valid_batches),
-                                 epochs=epochs,
-                                 verbose=verbose
-                                 )
-        # Return accuracy on the train and validation dataset
-        return history.history['val_accuracy'][-1]
+    print('Computing PCA...')
+    print('Data dimensionality before PCA: {}'.format(len(feature_matrix[0])))
+    pca = PCA(n_components=variance)
+    # Retrieve labels of all the image processed
+    # Recall: in some images faces, i.e. smiles, are not detected
+    files = [file.split('.')[0] for file in files]
+    dataset_labels = dataset_labels.iloc[files]
+    # Labels have to be transformed in int from the string format
+    y = [int(label) for label in dataset_labels]
+    X = np.array(feature_matrix)
+    test_size = 1 - training_size
+    # Split dataset in training and test dataset
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=0)
+    # Find the percentage of the training dataset that has to be dedicated to validation
+    validation_split = validation_split / training_size
+    # Divide training dataset between training and validation dataset
+    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=validation_split, random_state=0)
 
-    def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels=None):
-        # Steps parameter indicates on how many batches are necessary to work on each data on the Testing dataset
-        # model.predict returns the predictions made on the input
-        predictions = self.model.predict(x=test_batches, steps=len(test_batches), verbose=verbose)
-        predictions = np.round(predictions)
-        predicted_labels = np.array(np.argmax(predictions, axis=-1))
-        true_labels = np.array(test_batches.classes)
-        if confusion_mesh:
-            confusion_grid = pd.crosstab(true_labels, predicted_labels, normalize=True)
-            # Generate a custom diverging colormap
-            color_map = sn.diverging_palette(355, 250, as_cmap=True)
-            sn.heatmap(confusion_grid, cmap=color_map, vmax=0.5, vmin=0, center=0, xticklabels=class_labels,
-                       yticklabels=class_labels, square=True, linewidths=2, cbar_kws={"shrink": .5}, annot=True)
-            plt.xlabel('Predicted labels')
-            plt.ylabel('True labels')
-            plt.show()
-        print(classification_report(true_labels, predicted_labels))
-        # # todo comet_ml
-        # self.experiment.log_confusion_matrix(true_labels, predicted_labels)
-        # self.experiment.end()
-        # Return accuracy on the test dataset
-        return accuracy_score(true_labels, predicted_labels)
+    # Normalize values before using PCA
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+    X_valid = sc.transform(X_valid)
 
-    def evaluate(self, test_batches, verbose=1):
-        # model.evaluate predicts the output and returns the metrics function specified in model.compile()
-        score = self.model.evaluate(x=test_batches, verbose=verbose)
-        print(score)
+    # Fit the model with training data and apply the dimensionality reduction on them
+    X_train = pca.fit_transform(X_train)
+    # Data is now projected on the first principal components previously extracted from the training set
+    X_valid = pca.transform(X_valid)
+    X_test = pca.transform(X_test)
+    print('Data dimensionality after PCA: {}'.format(pca.n_components_))
+    print('Training the Support Vector Machine...')
+    clf = svm.SVC()
+    clf.fit(X_train, y_train)
+    # Return mean accuracy
+    print('Train accuracy: {}'.format(clf.score(X_train, y_train)))
+    print('Validation accuracy: {}'.format(clf.score(X_valid, y_valid)))
+    print('Test accuracy: {}'.format(clf.score(X_test, y_test)))
+
+
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn.model_selection import cross_val_score
+# print('Training the Random Forest...')
+# classifier = RandomForestClassifier(max_depth=10, random_state=0)
+# classifier.fit(X_train, y_train)
+# # Predicting the Test set results
+# print('Train accuracy: {}'.format(classifier.score(X_train, y_train)))
+# print('Validation accuracy: {}'.format(classifier.score(X_valid, y_valid)))
+# print('Test accuracy: {}'.format(classifier.score(X_test, y_test)))

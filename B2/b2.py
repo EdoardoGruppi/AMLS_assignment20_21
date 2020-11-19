@@ -1,113 +1,21 @@
-# todo reduce imports as much as possible like import seaborn to from seaborn import...
 # Import packages
-from tensorflow.keras import models
-from comet_ml import Experiment
 import pandas as pd
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D, Activation
+from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D
 from tensorflow.keras import optimizers
 import matplotlib.pyplot as plt
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import seaborn as sn
 from sklearn.metrics import accuracy_score, classification_report
-import cv2
 import numpy as np
-import os
-from sklearn.decomposition import PCA
-from skimage.feature import hog
-import joblib
-import shutil
-from pathlib import Path
-
-
-def delete_glasses(dataset_name):
-    # Avatar with black glasses to delete in training directory
-    model_ModelGlasses = models.load_model('./B2/glasses_model')
-    training_dir = './Datasets/{}/img'.format(dataset_name)
-    files = os.listdir(training_dir)
-    img_size = plt.imread(os.path.join(training_dir, files[0])).shape[:2][::-1]
-    training_images = ImageDataGenerator().flow_from_directory(directory='./Datasets/{}'.format(dataset_name),
-                                                               target_size=img_size, batch_size=10,
-                                                               classes=None, class_mode=None, shuffle=False)
-    predictions = model_ModelGlasses.predict(x=training_images, steps=len(training_images), verbose=1)
-    predictions = np.round(predictions)
-    predicted_labels = np.array(np.argmax(predictions, axis=-1))
-    images_to_delete = np.array(np.where(predicted_labels == 1)).flatten()
-    print('\nFROM TRAINING DIRECTORY: ')
-    print('There are {} to delete.'.format(len(images_to_delete)))
-    # todo remove next line
-    Path('./Datasets/{}_removed'.format(dataset_name)).mkdir(parents=True, exist_ok=True)
-    for i in images_to_delete:
-        print('Image deleted: ' + files[i])
-        # todo remove next line
-        shutil.move(os.path.join(training_dir, files[i]), './Datasets/{}_removed'.format(dataset_name))
-        # os.remove(os.path.join(training_dir, files[i]))
-    # # Avatar with black glasses to delete in test directory
-    test_dir = './Datasets/{}_test/img'.format(dataset_name)
-    files = os.listdir(test_dir)
-    test_images = ImageDataGenerator().flow_from_directory(directory='./Datasets/{}_test'.format(dataset_name),
-                                                           target_size=img_size, batch_size=10,
-                                                           classes=None, class_mode=None, shuffle=False)
-    predictions = model_ModelGlasses.predict(x=test_images, steps=len(test_images), verbose=1)
-    predictions = np.round(predictions)
-    predicted_labels = np.array(np.argmax(predictions, axis=-1))
-    images_to_delete = np.array(np.where(predicted_labels == 1)).flatten()
-    print('\nFROM TEST DIRECTORY: ')
-    print('There are {} to delete.'.format(len(images_to_delete)))
-    for i in images_to_delete:
-        print('Image deleted: ' + files[i])
-        # todo remove next line
-        shutil.move(os.path.join(test_dir, files[i]), './Datasets/{}_removed'.format(dataset_name))
-        # os.remove(os.path.join(test_dir, files[i]))
-
-
-def delete_glasses_hog_svm(dataset_name, img_size=(100, 100), n_components=50, orientations=6, pixels_per_cell=(8, 8),
-                           cells_per_block=(5, 5), multichannel=True):
-    # create the original path
-    path = './Datasets/{}/img'.format(dataset_name)
-    files = sorted(os.listdir(path), key=lambda x: int(x.split(".")[0]))
-    feature_list = []
-    pca = PCA(n_components=n_components)
-
-    filename = './B2/finalized_model.sav'
-    loaded_model = joblib.load(filename)
-    Path('./Datasets/{}_removed'.format(dataset_name)).mkdir(parents=True, exist_ok=True)
-    predictions = []
-    counter = 0
-    for file in files:
-        img = cv2.imread(path + '/' + file)
-        img = cv2.resize(img, img_size)
-        hog_feature = hog(img, orientations=orientations, pixels_per_cell=pixels_per_cell,
-                          cells_per_block=cells_per_block, multichannel=multichannel, feature_vector=True)
-        feature_list.append(hog_feature)
-        counter += 1
-        if counter % 600 == 0:
-            pca.fit(feature_list)
-            X = np.array(pca.fit_transform(feature_list))
-            predictions.extend(loaded_model.predict(X))
-            feature_list = []
-            print('{} passed'.format(counter))
-    # todo to change the following and the previous lines
-    pca.fit(feature_list)
-    X = np.array(pca.fit_transform(feature_list))
-    predictions.extend(loaded_model.predict(X))
-    predictions = np.asarray(predictions)
-    images_to_delete = np.array(np.where(predictions == 1)).flatten()
-    for i in images_to_delete:
-        print('Image deleted: ' + files[i])
-        # todo remove next line
-        shutil.move(os.path.join(path, files[i]), './Datasets/{}_removed'.format(dataset_name))
 
 
 class B2:
     def __init__(self, input_shape):
-        # Parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
-        # is a infinitely repeating dataset
         self.model = Sequential([
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
+            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
@@ -118,23 +26,16 @@ class B2:
             Flatten(),
             # Fraction of the input units dropped
             Dropout(rate=0.5),
+            # Number of units equal to the number of classes
             Dense(units=5, activation='softmax')
         ])
         self.model.summary()
-        # Using a 'binary_crossentropy' we would obtain one output, rather than two
-        # In that case the activation of the last layer must be a 'sigmoid'
-        # Alternatively it is possible to use a 'categorical_crossentropy' with a 'softmax' in the last layer
-        # In that case it is compulsory to insert class_mode='binary' in flow_from_dataframe() functions ...
-        # ...and predicted_labels = np.array(predictions).astype(int).flatten() instead of...
-        # ...predicted_labels = np.array(np.argmax(predictions, axis=-1))
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
 
-        self.experiment = Experiment(api_key="hn5we8X3ThjkDumjfdoP2t3rH", project_name="convnetb2",
-                                     workspace="edoardogruppi")
-
-    def train(self, training_batches, valid_batches, epochs=10, verbose=2):
-        # Training phase
+    def train(self, training_batches, valid_batches, epochs=35, verbose=2):
+        # Parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
+        # is a infinitely repeating dataset
         history = self.model.fit(x=training_batches,
                                  steps_per_epoch=len(training_batches),
                                  validation_data=valid_batches,
@@ -146,12 +47,17 @@ class B2:
         return history.history['val_accuracy'][-1]
 
     def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels=None):
-        # Steps parameter indicates on how many batches are necessary to work on each data on the Testing dataset
-        # model.predict returns the predictions made on the input
+        # Steps parameter indicates how many batches are necessary to work on each data in the testing dataset
+        # model.predict returns the predictions made on the input given
+        # It returns the probabilities that each image belongs to the existing classes
         predictions = self.model.predict(x=test_batches, steps=len(test_batches), verbose=verbose)
+        # Transform each prediction to an hot-encoding vector
         predictions = np.round(predictions)
+        # The image is associated to the class with the highest probability
         predicted_labels = np.array(np.argmax(predictions, axis=-1))
+        # Retrieve the true labels of the input
         true_labels = np.array(test_batches.classes)
+        # Plot a confusion matrix
         if confusion_mesh:
             confusion_grid = pd.crosstab(true_labels, predicted_labels, normalize=True)
             # Generate a custom diverging colormap
@@ -161,9 +67,9 @@ class B2:
             plt.xlabel('Predicted labels')
             plt.ylabel('True labels')
             plt.show()
+        # Print a detailed report on the classification results
+        print('\nCLASSIFICATION REPORT:')
         print(classification_report(true_labels, predicted_labels))
-        self.experiment.log_confusion_matrix(true_labels, predicted_labels)
-        self.experiment.end()
         # Return accuracy on the test dataset
         return accuracy_score(true_labels, predicted_labels)
 

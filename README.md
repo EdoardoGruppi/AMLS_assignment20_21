@@ -74,6 +74,8 @@ popular machine learning libraries and it offers GPUs where you can execute the 
 
 > **b2.py**
 
+> **pre_processing.py** //aggiungi anche le altre funzioni nella cartella preprocessing
+
 ## How to start
 
 A comprehensive guide is provided in the file [Instruction.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md).
