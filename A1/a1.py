@@ -1,12 +1,10 @@
 # Import packages
-import pandas as pd
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D
 from tensorflow.keras import optimizers
-import matplotlib.pyplot as plt
-import seaborn as sn
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score
+from PreProcessing.results_visualization import plot_history, plot_confusion_matrix
 
 
 class A1:
@@ -37,7 +35,7 @@ class A1:
         self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
 
-    def train(self, training_batches, valid_batches, epochs=35, verbose=2):
+    def train(self, training_batches, valid_batches, epochs=35, verbose=2, plot=False):
         # Parameters needed because fit() will run forever since image_generator.flow_from_dataframe()
         # is a infinitely repeating dataset
         history = self.model.fit(x=training_batches,
@@ -47,10 +45,15 @@ class A1:
                                  epochs=epochs,
                                  verbose=verbose
                                  )
-        # Return accuracy on the train and validation dataset
+        if plot:
+            # Plot loss and accuracy achieved on training and validation dataset
+            plot_history(history.history['accuracy'], history.history['val_accuracy'], history.history['loss'],
+                         history.history['val_loss'])
+        # todo validation or training? in all the models
+        # Return accuracy on validation dataset
         return history.history['val_accuracy'][-1]
 
-    def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels=None):
+    def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels='auto'):
         # Steps parameter indicates how many batches are necessary to work on each data in the testing dataset
         # model.predict returns the predictions made on the input given
         # It returns the probabilities that each image belongs to the existing classes
@@ -61,19 +64,9 @@ class A1:
         predicted_labels = np.array(np.argmax(predictions, axis=-1))
         # Retrieve the true labels of the input
         true_labels = np.array(test_batches.classes)
-        # Plot a confusion matrix
+        # Plot results through a confusion matrix
         if confusion_mesh:
-            confusion_grid = pd.crosstab(true_labels, predicted_labels, normalize=True)
-            # Generate a custom diverging colormap
-            color_map = sn.diverging_palette(355, 250, as_cmap=True)
-            sn.heatmap(confusion_grid, cmap=color_map, vmax=0.5, vmin=0, center=0, xticklabels=class_labels,
-                       yticklabels=class_labels, square=True, linewidths=2, cbar_kws={"shrink": .5}, annot=True)
-            plt.xlabel('Predicted labels')
-            plt.ylabel('True labels')
-            plt.show()
-        # Print a detailed report on the classification results
-        print('\nCLASSIFICATION REPORT:')
-        print(classification_report(true_labels, predicted_labels))
+            plot_confusion_matrix(class_labels, predicted_labels, true_labels)
         return accuracy_score(true_labels, predicted_labels)
 
     def evaluate(self, test_batches, verbose=1):

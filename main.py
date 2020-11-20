@@ -1,22 +1,17 @@
-# todo data_preprocessing must be shifted from the folder A1
-from A1.a1 import data_preprocessing
-from A1.a1 import A1
-
 # ======================================================================================================================
 # Data preprocessing
-# todo try to generalize target_column for both the task A1,A2
-data_train, data_val, data_test = data_preprocessing(data_directory='celeba', filename_column='img_name',
-                                                     target_column='gender', training_percentage_size=0.8,
-                                                     batches_size=10, validation_split=0.25)
-# Task A1
-input_shape = data_train.image_shape
-# Build model object.
-model_A1 = A1(input_shape)
-# Train model based on the training set (you should fine-tune your model based on validation set.)
-acc_A1_train = model_A1.train(data_train, data_val, epochs=10, verbose=2)
-# Test model based on the test set.
-acc_A1_test = model_A1.test(data_test, verbose=1, confusion_mesh=True)
-# todo Clean up memory/GPU etc...Some code to free memory if necessary.
+# data_train, data_val, data_test = data_preprocessing(data_directory='celeba', filename_column='img_name',
+#                                                      target_column='gender', training_percentage_size=0.8,
+#                                                      batches_size=10, validation_split=0.25)
+# # Task A1
+# input_shape = data_train.image_shape
+# # Build model object.
+# model_A1 = A1(input_shape)
+# # Train model based on the training set (you should fine-tune your model based on validation set.)
+# acc_A1_train = model_A1.train(data_train, data_val, epochs=10, verbose=2)
+# # Test model based on the test set.
+# acc_A1_test = model_A1.test(data_test, verbose=1, confusion_mesh=True)
+# # todo Clean up memory/GPU etc...Some code to free memory if necessary.
 
 
 # ======================================================================================================================

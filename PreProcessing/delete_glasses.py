@@ -8,6 +8,12 @@ import os
 
 
 def delete_glasses(dataset_name):
+    """
+        Moves avatar images where eyes are hidden behind black sunglasses in a new dedicated folder.
+        It leverages a pretrained CNN model
+
+        :param dataset_name: name (not path) of the folder where to remove avatars.
+    """
     # Load the pre trained model in the PreProcessing folder
     model_ModelGlasses = models.load_model('./PreProcessing/glasses_model')
     training_dir = './Datasets/{}/img'.format(dataset_name)
