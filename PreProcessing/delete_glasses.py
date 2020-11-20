@@ -2,25 +2,28 @@
 from tensorflow.keras import models
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import matplotlib.pyplot as plt
 import shutil
 import os
+from pathlib import Path
 
 
-def delete_glasses(dataset_name):
+def delete_glasses(dataset_name, img_size=(224, 224)):
     """
         Moves avatar images where eyes are hidden behind black sunglasses in a new dedicated folder.
         It leverages a pretrained CNN model
 
+        :param img_size: size of the input image expected by the model. default_value=(224,224)
         :param dataset_name: name (not path) of the folder where to remove avatars.
     """
     # Load the pre trained model in the PreProcessing folder
-    model_ModelGlasses = models.load_model('./PreProcessing/glasses_model')
+    model_ModelGlasses = models.load_model('./PreProcessing/model_glasses')
     training_dir = './Datasets/{}/img'.format(dataset_name)
     # List of all the files in the training directory
     files = os.listdir(training_dir)
-    # Get the image size. The number of channels are not considered.
-    img_size = plt.imread(os.path.join(training_dir, files[0])).shape[:2][::-1]
+    remove_images = './Datasets/{}_removed'.format(dataset_name)
+    # If parents is True, any missing parents of the folder will be created
+    # If exist_ok is True, an Error is raised if the directory already exists
+    Path(remove_images).mkdir(parents=True, exist_ok=True)
     # ImageDataGenerator create batches of images everytime it is called
     training_images = ImageDataGenerator().flow_from_directory(directory='./Datasets/{}'.format(dataset_name),
                                                                target_size=img_size, batch_size=16,
@@ -34,7 +37,7 @@ def delete_glasses(dataset_name):
     print('\nFROM TRAINING DIRECTORY:\nThere are {} to delete.'.format(len(images_to_delete)))
     # Move all the files in a dedicated folder
     for i in images_to_delete:
-        shutil.move(os.path.join(training_dir, files[i]), './Datasets/{}_removed'.format(dataset_name))
+        shutil.move(os.path.join(training_dir, files[i]), remove_images)
 
     # Same procedure applied to the test directory
     test_dir = './Datasets/{}_test/img'.format(dataset_name)
@@ -48,4 +51,4 @@ def delete_glasses(dataset_name):
     images_to_delete = np.array(np.where(predicted_labels == 1)).flatten()
     print('\nFROM TEST DIRECTORY:\nThere are {} to delete.'.format(len(images_to_delete)))
     for i in images_to_delete:
-        shutil.move(os.path.join(test_dir, files[i]), './Datasets/{}_removed'.format(dataset_name))
+        shutil.move(os.path.join(test_dir, files[i]), remove_images)
