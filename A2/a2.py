@@ -1,7 +1,7 @@
 # Import packages
 from sklearn import svm
 from sklearn.metrics import accuracy_score
-from PreProcessing.results_visualization import plot_history, plot_confusion_matrix
+from Modules.results_visualization import plot_history, plot_confusion_matrix
 from numpy import array
 
 

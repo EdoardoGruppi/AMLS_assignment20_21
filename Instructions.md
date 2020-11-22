@@ -48,13 +48,13 @@ randomly the avatar traits between 10 artworks, 4 colors and 4 proportions.
 The following table summarizes how the examples are distributed amongst the five
 possibilities for both: eye color and face shape.
 
-| Class | Eye color | Face shape |
-| ----- | --------- | ---------- |
-| 0     | 2004      | 2000       |
-| 1     | 2018      | 2000       |
-| 2     | 1969      | 2000       |
-| 3     | 1992      | 2000       |
-| 4     | 2017      | 2000       |
+| Class | Eye color | Face shape | Eye color (no black sunglasses) |
+| ----- | --------- | ---------- | ------------------------------  |
+| 0     | 2004      | 2000       | 1643                            |
+| 1     | 2018      | 2000       | 1654                            |
+| 2     | 1969      | 2000       | 1593                            |
+| 3     | 1992      | 2000       | 1621                            |
+| 4     | 2017      | 2000       | 1635                            |
 
 ### Dataset division
 

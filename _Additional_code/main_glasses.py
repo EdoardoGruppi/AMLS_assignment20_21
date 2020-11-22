@@ -4,8 +4,8 @@ from _Additional_code.model_glasses import ModelGlasses
 from shutil import move, rmtree
 
 # Model Glasses ========================================================================================================
-# Remove model already saved in the PreProcessing folder
-# rmtree('../PreProcessing/model_glasses', ignore_errors=True)
+# Remove model already saved in the Modules folder
+# rmtree('../Modules/model_glasses', ignore_errors=True)
 training_batches, valid_batches, test_batches = glasses_data_preprocessing(data_directory='cartoon_glasses',
                                                                            filename_column='file_name',
                                                                            target_column='glasses', img_size=(224, 224),
@@ -24,5 +24,5 @@ model_ModelGlasses.evaluate(test_batches=test_batches, verbose=1)
 acc_ModelGlasses_test = model_ModelGlasses.test(test_batches, verbose=1, confusion_mesh=True)
 # Print out your results with following format:
 print('TA1:{},{}'.format(acc_ModelGlasses_train, acc_ModelGlasses_test))
-# Move model saved in the PreProcessing folder
-move('model_glasses', '../PreProcessing')
+# Move model saved in the Modules folder
+move('model_glasses', '../Modules')

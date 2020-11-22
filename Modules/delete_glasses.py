@@ -15,8 +15,8 @@ def delete_glasses(dataset_name, img_size=(224, 224)):
         :param img_size: size of the input image expected by the model. default_value=(224,224)
         :param dataset_name: name (not path) of the folder where to remove avatars.
     """
-    # Load the pre trained model in the PreProcessing folder
-    model_ModelGlasses = models.load_model('./PreProcessing/model_glasses')
+    # Load the pre trained model in the Modules folder
+    model_ModelGlasses = models.load_model('./Modules/model_glasses')
     training_dir = './Datasets/{}/img'.format(dataset_name)
     # List of all the files in the training directory
     files = os.listdir(training_dir)
@@ -40,9 +40,9 @@ def delete_glasses(dataset_name, img_size=(224, 224)):
         shutil.move(os.path.join(training_dir, files[i]), remove_images)
 
     # Same procedure applied to the test directory
-    test_dir = './Datasets/{}_test/img'.format(dataset_name)
+    test_dir = './Datasets/{}_testing/img'.format(dataset_name)
     files = os.listdir(test_dir)
-    test_images = ImageDataGenerator().flow_from_directory(directory='./Datasets/{}_test'.format(dataset_name),
+    test_images = ImageDataGenerator().flow_from_directory(directory='./Datasets/{}_testing'.format(dataset_name),
                                                            target_size=img_size, batch_size=16,
                                                            classes=None, class_mode=None, shuffle=False)
     predictions = model_ModelGlasses.predict(x=test_images, steps=len(test_images), verbose=1)

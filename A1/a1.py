@@ -4,7 +4,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, BatchNormalization, Conv2D
 from tensorflow.keras import optimizers
 from sklearn.metrics import accuracy_score
-from PreProcessing.results_visualization import plot_history, plot_confusion_matrix
+from Modules.results_visualization import plot_history, plot_confusion_matrix
 
 
 class A1:

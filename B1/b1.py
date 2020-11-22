@@ -4,18 +4,17 @@ from tensorflow.keras.layers import Dense, Flatten, Dropout, MaxPooling2D, Batch
 from tensorflow.keras import optimizers
 from sklearn.metrics import accuracy_score
 import numpy as np
-from PreProcessing.results_visualization import plot_history, plot_confusion_matrix
+from Modules.results_visualization import plot_history, plot_confusion_matrix
 
 
 class B1:
     def __init__(self, input_shape):
         self.model = Sequential([
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
-            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
+            Conv2D(filters=16, kernel_size=(1, 1), activation='relu', padding='same'),
             BatchNormalization(),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Flatten(),
