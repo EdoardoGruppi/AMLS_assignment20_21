@@ -41,14 +41,15 @@ def delete_glasses(dataset_name, img_size=(224, 224)):
 
     # Same procedure applied to the test directory
     test_dir = './Datasets/{}_testing/img'.format(dataset_name)
-    files = os.listdir(test_dir)
-    test_images = ImageDataGenerator().flow_from_directory(directory='./Datasets/{}_testing'.format(dataset_name),
-                                                           target_size=img_size, batch_size=16,
-                                                           classes=None, class_mode=None, shuffle=False)
-    predictions = model_ModelGlasses.predict(x=test_images, steps=len(test_images), verbose=1)
-    predictions = np.round(predictions)
-    predicted_labels = np.array(np.argmax(predictions, axis=-1))
-    images_to_delete = np.array(np.where(predicted_labels == 1)).flatten()
-    print('\nFROM TEST DIRECTORY:\nThere are {} to delete.'.format(len(images_to_delete)))
-    for i in images_to_delete:
-        shutil.move(os.path.join(test_dir, files[i]), remove_images)
+    if os.path.isdir(test_dir):
+        files = os.listdir(test_dir)
+        test_images = ImageDataGenerator().flow_from_directory(directory='./Datasets/{}_testing'.format(dataset_name),
+                                                               target_size=img_size, batch_size=16,
+                                                               classes=None, class_mode=None, shuffle=False)
+        predictions = model_ModelGlasses.predict(x=test_images, steps=len(test_images), verbose=1)
+        predictions = np.round(predictions)
+        predicted_labels = np.array(np.argmax(predictions, axis=-1))
+        images_to_delete = np.array(np.where(predicted_labels == 1)).flatten()
+        print('\nFROM TEST DIRECTORY:\nThere are {} to delete.'.format(len(images_to_delete)))
+        for i in images_to_delete:
+            shutil.move(os.path.join(test_dir, files[i]), remove_images)

@@ -8,7 +8,7 @@ from numpy import array
 class A2:
     def __init__(self):
         print('Training the Support Vector Machine...')
-        self.model = svm.SVC()
+        self.model = svm.SVC(kernel='rbf', gamma='scale', C=1)
 
     def train(self, x_train, x_valid, y_train, y_valid, plot=False):
         self.model.fit(x_train, y_train)

@@ -11,12 +11,8 @@ class B2:
     def __init__(self, input_shape):
         self.model = Sequential([
             Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same', input_shape=input_shape),
-            Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
-            Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
-            MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             BatchNormalization(),
@@ -28,7 +24,7 @@ class B2:
             Dense(units=5, activation='softmax')
         ])
         self.model.summary()
-        self.model.compile(optimizer=optimizers.Adam(learning_rate=0.0001), loss='categorical_crossentropy',
+        self.model.compile(optimizer=optimizers.Adam(learning_rate=0.001), loss='categorical_crossentropy',
                            metrics=['accuracy'])
 
     def train(self, training_batches, valid_batches, epochs=35, verbose=2, plot=False):

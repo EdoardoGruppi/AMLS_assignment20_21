@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
-from skimage.feature import hog
+from skimage.feature import hog, local_binary_pattern
 from sklearn.preprocessing import StandardScaler
 
 
@@ -116,9 +116,13 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
         img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
         # Resize the image in case it has a different size than the expected
         img = cv2.resize(img, img_size)
-        hog_feature = hog(img, orientations=6, pixels_per_cell=(8, 8), cells_per_block=(3, 3),
+        # todo
+        # lbp_feature = local_binary_pattern(img, P=8, R=1).flatten()
+        hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
                           multichannel=False, feature_vector=True)
         # Append the HOG features vector to the feature map
+        # todo
+        # hog_feature = [*hog_feature, *lbp_feature]
         feature_matrix.append(hog_feature)
         if counter % 1000 == 0:
             print('Images processed: {}'.format(counter))

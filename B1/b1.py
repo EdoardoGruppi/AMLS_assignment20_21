@@ -14,7 +14,7 @@ class B1:
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
             MaxPooling2D(pool_size=(2, 2), strides=2),
-            Conv2D(filters=16, kernel_size=(1, 1), activation='relu', padding='same'),
+            Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
             BatchNormalization(),
             MaxPooling2D(pool_size=(2, 2), strides=2),
             Flatten(),
