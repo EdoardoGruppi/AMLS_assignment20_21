@@ -66,9 +66,9 @@ popular machine learning libraries and it offers GPUs where you can execute the 
 
 ### Role of each file
 
-**main.py** is the starting point of the entire project. It defines the order in which instructions are realised. More precisely, it is responsible to call functions from other files in order to divide the datasets provided, pre-process images and instantiate, train and test models.
+****main.py**** is the starting point of the entire project. It defines the order in which instructions are realised. More precisely, it is responsible to call functions from other files in order to divide the datasets provided, pre-process images and instantiate, train and test models.
 
-**a1.py** contains the class A1 from which to instantiate the CNN model for gender detection. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
+****a1.py**** contains the class A1 from which to instantiate the CNN model for gender detection. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
 
 **a2.py** contains the class A2 from which to instantiate the HOG+SVM model for smiles detection. Once the model is created, it provides functions to be trained and to predict the class membership of unlabelled examples.
 
