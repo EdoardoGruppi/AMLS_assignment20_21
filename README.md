@@ -2,7 +2,7 @@
 
 [Project](https://github.com/EdoardoGruppi/AMLS_assignment20_21.git)
 
-Short description of the project
+SHORT DESCRIPTION OF THE PROJECT
 
 ## Before starting
 
@@ -74,15 +74,17 @@ popular machine learning libraries and it offers GPUs where you can execute the 
 
 > **b2.py** contains the class B2 from which to instantiate the CNN model used for eye-color recognition. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
 
-> **pre_processing.py** provides crucial functions. _data_preprocessing_ splits original dataset in three different parts for training, validation and testing; rescales and reshapes images; applies data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. _hog_pca_preprocessing_ instead for Task A2. It
+> **pre_processing.py** provides crucial functions related to data preparation. _data_preprocessing_ splits the original dataset in three different parts for training, validation and testing; rescales and reshapes images; applies data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. _hog_pca_preprocessing_ instead is called exclusively for Task A2. Primarily, it extracts meaningful features with the Histogram of Oriented Gradients (HOG) descriptor from a given image. Secondly, it separates datasets in three parts. Then, it normalizes features before reducing data dimensionality via the Principal Component Analysis (PCA) algorithm. The last function it provides (_hog_pca_augmentation_preprocessing_) follows the process pipeline just described for Task A2 but allowing to apply data_augmentation on the training images.
 
-> **delete_glasses.py**
+> **delete_glasses.py** includes the homonymous function to delete avatars that wear black sunglasses making not feasible the eye-color detection in the task B2. It employs a pre trained model created specifically and saved in the model_glasses directory within the Modules folder.
 
-> **face_extraction.py**
+> **face_extraction.py** leverages the face*recognition package to extract faces or smiles through the \_face_extraction* and _smiles_extraction_ functions respectively. The latter is adopted during the images pre-processing of Task A2.
 
-> **results_visualization.py**
+> **results_visualization.py** exploits the seaborn and matplotlib libraries to plot the performance and learning curves of the training phase and to generate confusion matrices summarizing the testing results.
 
-> **\_Additional_code folder**
+> **test_pre_processing.py** contains functions to prepare the test batches from the test datasets provided subsequently.
+
+> **\_Additional_code folder** includes some .py files of the most noteworthy experiments conducted during the project. In particular, _model_glasses.py_, _main_glasses.py_ and _glasses_data_preparation.py_ show the code employed to create from scratch the pre-trained model used to remove avatars with black glasses in Task B2 . _face_net.py_ and _viola_jones.py_ are some alternatives taken into account to extract smiles in Task A2. _normalizing.py_ instead has been considered to normalize images (featurewise) before training the model. It returns the mean and the std computed on all the images in a given folder.
 
 ## How to start
 

@@ -142,6 +142,102 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=validation_split)
     # Normalize values before using PCA
     sc = StandardScaler()
+    # Fit the StandardScaler with training data and apply the dimensionality reduction on them
+    x_train = sc.fit_transform(x_train)
+    x_test = sc.transform(x_test)
+    x_valid = sc.transform(x_valid)
+    # Fit the pca with training data and apply the dimensionality reduction on them
+    x_train = pca.fit_transform(x_train)
+    # Data is now projected on the first principal components previously extracted from the training set
+    x_valid = pca.transform(x_valid)
+    x_test = pca.transform(x_test)
+    print('Data dimensionality after PCA: {}'.format(pca.n_components_))
+    return x_test, x_train, x_valid, y_test, y_train, y_valid
+
+
+def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15, variance=0.95,
+                                       training_size=0.85, target_column='smiling'):
+    """
+    Given a dataset it extracts HOG features from each image. Data dimensionality is then further reduced applying
+    PCA algorithm. It also augments data on the training set.
+
+    :param dataset_name: name (not path) of the folder that contains the images.
+    :param img_size: image dimension after reshaping. default_value=(96,48).
+    :param target_column: name of the column in the csv file where the labels are declared. default_value='smiling'.
+    :param training_size: percentage size of the entire dataset dedicated to the training dataset. default_value=0.85.
+    :param validation_split: percentage size of the entire dataset dedicated to the validation set. default_value=0.15
+    :param variance: the amount of variance to capture. default_value=0.95.
+    :return: dataset and labels divided in training, validation and test parts. To each image is associated
+        a reduced vector of features thanks to HOG and PCA algorithms.
+    """
+    # Create path to access to all the images
+    path = './Datasets/{}'.format(dataset_name)
+    images_dir = '{}/img'.format(path)
+    # List all the images within the folder
+    files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
+    dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')[target_column]
+    # Divide dataset in three parts
+    # Simple random sampling to select examples for the test dataset
+    # Augmentation not applied on test and validation sets
+    valid_test_split = validation_split + 1 - training_size
+    valid_test_images = sorted(sample(files, round(len(files) * valid_test_split)))
+    feature_matrix = []
+    print('Extracting features from validation and test sets...')
+    for file in valid_test_images:
+        img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
+        # Resize the image in case it has a different size than the expected
+        img = cv2.resize(img, img_size)
+        hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+                          multichannel=False, feature_vector=True)
+        # Append the HOG features vector to the feature map
+        feature_matrix.append(hog_feature)
+    # Retrieve labels
+    labels = dataset_labels.iloc[[file.split('.')[0] for file in valid_test_images]]
+    # Test size with respect to the sum of test and validation sets
+    test_size = (1 - training_size) / valid_test_split
+    x_valid, x_test, y_valid, y_test = train_test_split(np.array(feature_matrix), labels, test_size=test_size)
+
+    # Create image data augmentation generator
+    data_generator = ImageDataGenerator(height_shift_range=0.2, rotation_range=40, width_shift_range=0.2,
+                                        brightness_range=[0.4, 1.5], shear_range=0.2, zoom_range=0.3)
+    training_images = sorted(i for i in files if i not in valid_test_images)
+    feature_matrix = []
+    # Data augmentation applied only to the training dataset
+    # Created a list to keep track of the files from which images are generated.
+    # It is crucial to retrieve the correct labels after having applied data augmentation.
+    names = []
+    print('Extracting features from training set...\nApplying data augmentation...')
+    for file in training_images:
+        img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
+        # Resize the image in case it has a different size than the expected
+        img = cv2.resize(img, img_size)
+        hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+                          multichannel=False, feature_vector=True)
+        # Append the HOG features vector to the feature map
+        feature_matrix.append(hog_feature)
+        names.append(file)
+
+        # Images on which data_generator works must have dimension (number, width, height, channels)
+        img = np.expand_dims(img, (0, 3))
+        # Apply data augmentation
+        it = data_generator.flow(img, batch_size=1)
+        # Convert the image format to the original (width, height)
+        img = it.next()[0, :, :, 0]
+        hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+                          multichannel=False, feature_vector=True)
+        # Append the HOG features vector to the feature map
+        feature_matrix.append(hog_feature)
+        names.append(file)
+
+    # Retrieve labels
+    y_train = dataset_labels.iloc[[file.split('.')[0] for file in names]]
+    x_train = np.array(feature_matrix)
+
+    print('Computing PCA...')
+    print('Data dimensionality before PCA: {}'.format(len(feature_matrix[0])))
+    pca = PCA(n_components=variance)
+    # Normalize values before using PCA
+    sc = StandardScaler()
     x_train = sc.fit_transform(x_train)
     x_test = sc.transform(x_test)
     x_valid = sc.transform(x_valid)
@@ -150,110 +246,5 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     # Data is now projected on the first principal components previously extracted from the training set
     x_valid = pca.transform(x_valid)
     x_test = pca.transform(x_test)
-
     print('Data dimensionality after PCA: {}'.format(pca.n_components_))
     return x_test, x_train, x_valid, y_test, y_train, y_valid
-
-
-# todo delete
-# def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15, variance=0.95,
-#                                        training_size=0.85, target_column='smiling'):
-#     """
-#     Given a dataset it extracts HOG features from each image. Data dimensionality is then further reduced applying
-#     PCA algorithm. It also augments data on the training set.
-#
-#     :param dataset_name: name (not path) of the folder that contains the images.
-#     :param img_size: image dimension after reshaping. default_value=(96,48).
-#     :param target_column: name of the column in the csv file where the labels are declared. default_value='smiling'.
-#     :param training_size: percentage size of the entire dataset dedicated to the training dataset. default_value=0.85.
-#     :param validation_split: percentage size of the entire dataset dedicated to the validation set. default_value=0.15
-#     :param variance: the amount of variance to capture. default_value=0.95.
-#     :return: dataset and labels divided in training, validation and test parts. To each image is associated
-#         a reduced vector of features thanks to HOG and PCA algorithms.
-#     """
-#     # Create path to access to all the images
-#     path = './Datasets/{}'.format(dataset_name)
-#     images_dir = '{}/img'.format(path)
-#     # List all the images within the folder
-#     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
-#     dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')[target_column]
-#     # Divide dataset in three parts
-#     # Simple random sampling to select examples for the test dataset
-#     # Augmentation not applied on test and validation sets
-#     valid_test_split = validation_split + 1 - training_size
-#     valid_test_images = sorted(sample(files, round(len(files) * valid_test_split)))
-#     feature_matrix = []
-#     print('Extracting features from validation and test sets...')
-#     for file in valid_test_images:
-#         img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
-#         # Resize the image in case it has a different size than the expected
-#         img = cv2.resize(img, img_size)
-#         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
-#                           multichannel=False, feature_vector=True)
-#         # Append the HOG features vector to the feature map
-#         feature_matrix.append(hog_feature)
-#     # Retrieve labels
-#     labels = dataset_labels.iloc[[file.split('.')[0] for file in valid_test_images]]
-#     # Test size with respect to the sum of test and validation sets
-#     test_size = (1 - training_size) / valid_test_split
-#     x_valid, x_test, y_valid, y_test = train_test_split(np.array(feature_matrix), labels, test_size=test_size)
-#
-#     # create image data augmentation generator
-#     data_generator = ImageDataGenerator(height_shift_range=0.2, rotation_range=40, width_shift_range=0.2,
-#                                         brightness_range=[0.4, 1.5], shear_range=0.2, zoom_range=0.3)
-#     training_images = sorted(i for i in files if i not in valid_test_images)
-#     feature_matrix = []
-#     names = []
-#     print('Extracting features from training set...\nApplying data augmentation...')
-#     for file in training_images:
-#         img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
-#         # Resize the image in case it has a different size than the expected
-#         img = cv2.resize(img, img_size)
-#         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
-#                           multichannel=False, feature_vector=True)
-#         # Append the HOG features vector to the feature map
-#         feature_matrix.append(hog_feature)
-#         names.append(file)
-#
-#         img = np.expand_dims(img, (0, 3))
-#         it = data_generator.flow(img, batch_size=1)
-#         img = it.next()[0, :, :, 0]
-#         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
-#                           multichannel=False, feature_vector=True)
-#         # Append the HOG features vector to the feature map
-#         feature_matrix.append(hog_feature)
-#         names.append(file)
-#
-#         img = it.next()[0, :, :, 0]
-#         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
-#                           multichannel=False, feature_vector=True)
-#         # Append the HOG features vector to the feature map
-#         feature_matrix.append(hog_feature)
-#         names.append(file)
-#
-#         img = it.next()[0, :, :, 0]
-#         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
-#                           multichannel=False, feature_vector=True)
-#         # Append the HOG features vector to the feature map
-#         feature_matrix.append(hog_feature)
-#         names.append(file)
-#
-#     # Retrieve labels
-#     y_train = dataset_labels.iloc[[file.split('.')[0] for file in names]]
-#     x_train = np.array(feature_matrix)
-#
-#     print('Computing PCA...')
-#     print('Data dimensionality before PCA: {}'.format(len(feature_matrix[0])))
-#     pca = PCA(n_components=variance)
-#     # Normalize values before using PCA
-#     sc = StandardScaler()
-#     x_train = sc.fit_transform(x_train)
-#     x_test = sc.transform(x_test)
-#     x_valid = sc.transform(x_valid)
-#     # Fit the model with training data and apply the dimensionality reduction on them
-#     x_train = pca.fit_transform(x_train)
-#     # Data is now projected on the first principal components previously extracted from the training set
-#     x_valid = pca.transform(x_valid)
-#     x_test = pca.transform(x_test)
-#     print('Data dimensionality after PCA: {}'.format(pca.n_components_))
-#     return x_test, x_train, x_valid, y_test, y_train, y_valid

@@ -63,7 +63,7 @@ def smiles_extraction(dataset_name, img_size=(96, 48)):
     return data_directory.split('/')[-1], files_not_detected
 
 
-def face_extraction(dataset_name, img_size=(96, 96)):
+def faces_extraction(dataset_name, img_size=(96, 96)):
     """
         Extracts faces if detected from images. It returns one face for every picture.
         The extracted images are placed in a new dedicated folder and are all in 'rgb'.
