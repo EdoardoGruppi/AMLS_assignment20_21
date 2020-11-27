@@ -42,7 +42,7 @@ class B2:
             plot_history(history.history['accuracy'], history.history['val_accuracy'], history.history['loss'],
                          history.history['val_loss'])
         # Return accuracy on the train and validation dataset
-        return history.history['val_accuracy'][-1]
+        return history.history['accuracy'][-1], history.history['val_accuracy'][-1]
 
     def test(self, test_batches, verbose=1, confusion_mesh=False, class_labels='auto'):
         # Steps parameter indicates how many batches are necessary to work on each data in the testing dataset

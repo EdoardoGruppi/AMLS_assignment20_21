@@ -1,26 +1,20 @@
 # Import packages
-from sklearn import svm
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
-from Modules.results_visualization import plot_history, plot_confusion_matrix
+from Modules.results_visualization import plot_confusion_matrix
 from numpy import array
 
 
 class A2:
-    def __init__(self):
+    def __init__(self, kernel='rbf', gamma='scale', c=1, verbose=False):
         print('Training the Support Vector Machine...')
-        self.model = svm.SVC(kernel='rbf', gamma='scale', C=1)
+        self.model = SVC(kernel=kernel, gamma=gamma, C=c, verbose=verbose)
 
-    def train(self, x_train, x_valid, y_train, y_valid, plot=False):
+    def train(self, x_train, x_valid, y_train, y_valid):
         self.model.fit(x_train, y_train)
-        print('Train accuracy: {}'.format(self.model.score(x_train, y_train)))
+        train_accuracy = self.model.score(x_train, y_train)
         validation_accuracy = self.model.score(x_valid, y_valid)
-        print('Validation accuracy: {}'.format(validation_accuracy))
-        # todo
-        # if plot:
-        #     # Plot loss and accuracy achieved on training and validation dataset
-        #     plot_history()
-        # Return accuracy on validation dataset
-        return validation_accuracy
+        return train_accuracy, validation_accuracy
 
     def test(self, x_test, y_test, confusion_mesh=False, class_labels='auto'):
         # Predict labels

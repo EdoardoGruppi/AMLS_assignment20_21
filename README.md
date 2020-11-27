@@ -4,8 +4,6 @@
 
 Short description of the project
 
-Insert glasses_model code link
-
 ## Before starting
 
 ### Packages required
@@ -19,9 +17,9 @@ Compulsory
 
 - `Numpy` is the fundamental package for array computing with Python.
 
-- `Tensorflow ` is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs). **Important**: Recently Keras has been completely wrapped within Tensorflow.
+- `Tensorflow` is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs). **Important**: Recently Keras has been completely wrapped within Tensorflow.
 
-- `Pathlib ` offers a set of classes to handle filesystem paths.
+- `Pathlib` offers a set of classes to handle filesystem paths.
 
 - `Shutil` provides a number of high-level operations on files and collections of files. In particular, functions are provided which support file copying and removal.
 
@@ -31,19 +29,21 @@ Compulsory
 
 - `Sklearn` offers simple and efficient tools for predictive data analysis.
 
-- `Random ` implements pseudo-random number generators for various distributions.
+- `Skimage` is a collection of algorithms for image processing.
 
-- `cv2 `
-
-- `face_recognition ` cmake
-
-Optional
+- `Random` implements pseudo-random number generators for various distributions.
 
 - `seaborn` is a data visualization library based on matplotlib that provides a high-level interface for drawing attractive and informative statistical graphics.
 
+- `cv2` is an open-source library that includes several hundreds of computer vision algorithms.
+
+- `face_recognition` Recognize and manipulate faces with the world’s simplest face recognition library. Built from dlib’s state-of-the-art deep learning library.
+
+Optional
+
 - `comet_ml` helps to manage and track machine learning experiments.
 
-- `vprof`
+- `vprof` is a Python package providing rich and interactive visualizations for various Python program characteristics such as running time and memory usage.
 
 ### Software used
 
@@ -64,7 +64,7 @@ popular machine learning libraries and it offers GPUs where you can execute the 
 
 ### Role of each file
 
-> **main.py**
+> **main.py** is the starting point of the entire project. It defines the order in which instructions are realised. More precisely, it is responsible to call functions from other files in order to divide the datasets provided, pre-process images and instantiate, train and test models.
 
 > **a1.py**
 
@@ -74,7 +74,15 @@ popular machine learning libraries and it offers GPUs where you can execute the 
 
 > **b2.py**
 
-> **pre_processing.py** //aggiungi anche le altre funzioni nella cartella preprocessing. SPECIFY HOW TO INSERT DATASET. ADD AND COMMENT EXPERIMENTAL FILE
+> **pre_processing.py**
+
+> **delete_glasses.py**
+
+> **face_extraction.py**
+
+> **results_visualization.py**
+
+> **\_Additional_code folder**
 
 ## How to start
 

@@ -17,6 +17,10 @@
    If not, there are lots of guides on the web to install everything you need. For instance take a look at
    [this](https://deeplizard.com/learn/video/IubEtS2JAiY).
 
+## cmake
+
+[link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508)
+
 ## How to compile
 
 Once all the necessary packages have been installed you can run the code by typing this line
@@ -49,7 +53,7 @@ The following table summarizes how the examples are distributed amongst the five
 possibilities for both: eye color and face shape.
 
 | Class | Eye color | Face shape | Eye color (no black sunglasses) |
-| ----- | --------- | ---------- | ------------------------------  |
+| ----- | --------- | ---------- | ------------------------------- |
 | 0     | 2004      | 2000       | 1643                            |
 | 1     | 2018      | 2000       | 1654                            |
 | 2     | 1969      | 2000       | 1593                            |

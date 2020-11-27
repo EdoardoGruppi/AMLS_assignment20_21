@@ -1,5 +1,6 @@
 Datasets/
 .idea
+c.py
 testNotebook.ipynb
 logs
 A1/__pycache__
@@ -16,3 +17,4 @@ haarcascade_frontalface_alt.xml
 haarcascade_frontalface_alt_tree.xml
 faceNet.py
 __pycache__
+_Additional_code/models.py
