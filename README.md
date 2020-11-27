@@ -66,15 +66,15 @@ popular machine learning libraries and it offers GPUs where you can execute the 
 
 > **main.py** is the starting point of the entire project. It defines the order in which instructions are realised. More precisely, it is responsible to call functions from other files in order to divide the datasets provided, pre-process images and instantiate, train and test models.
 
-> **a1.py**
+> **a1.py** contains the class A1 from which to instantiate the CNN model for gender detection. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
 
-> **a2.py**
+> **a2.py** contains the class A2 from which to instantiate the HOG+SVM model for smiles detection. Once the model is created, it provides functions to be trained and to predict the class membership of unlabelled examples.
 
-> **b1.py**
+> **b1.py** contains the class B1 from which to instantiate the CNN model used for face-shape recognition. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
 
-> **b2.py**
+> **b2.py** contains the class B2 from which to instantiate the CNN model used for eye-color recognition. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
 
-> **pre_processing.py**
+> **pre_processing.py** provides crucial functions. _data_preprocessing_ splits original dataset in three different parts for training, validation and testing; rescales and reshapes images; applies data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. _hog_pca_preprocessing_ instead for Task A2. It
 
 > **delete_glasses.py**
 
