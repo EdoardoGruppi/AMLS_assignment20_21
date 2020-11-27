@@ -73,7 +73,7 @@ Please note that the descriptions provided in this subsection are taken directly
 
 **test_pre_processing.py** contains functions to prepare the test batches starting from the test datasets provided subsequently.
 
-**\_Additional_code folder** includes some .py files of the most noteworthy experiments conducted during the project. In particular, _model_glasses.py_, _main_glasses.py_ and _glasses_data_preparation.py_ show the code employed to create from scratch the pre-trained model used to remove avatars with black glasses in Task B2 . _face_net.py_ and _viola_jones.py_ are some alternatives taken into account to extract smiles in Task A2. _normalizing.py_ instead has been considered to normalize images (featurewise) before training the models. It returns the mean and the stdandard deviation computed on all the images in a given folder.
+**\_Additional_code folder** includes some .py files of the most noteworthy experiments conducted during the project. In particular, `model_glasses.py`, `main_glasses.py` and `glasses_data_preparation.py` show the code employed to create from scratch the pre-trained model used to remove avatars with black glasses in Task B2 . `face_net.py` and `viola_jones.py` are some alternatives taken into account to extract smiles in Task A2. `normalizing.py` instead has been considered to normalize images (featurewise) before training the models. It returns the mean and the stdandard deviation computed on all the images in a given folder.
 
 ## Software used
 

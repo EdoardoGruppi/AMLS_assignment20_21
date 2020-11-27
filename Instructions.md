@@ -3,8 +3,9 @@
 ## Setup
 
 1. Install Tensorflow and all the other packages appointed in the README.md file.
-2. Download the project directory from [GitHub](https://github.com/EdoardoGruppi/AMLS_assignment20_21)
-3. (Optional) Tensorflow enables to work directly on GPU without requiring explicity additional code.
+2. To install the face_recognition packet may be necessary to install dlib and cmake before. [Here](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508) is a complete progressione.
+3. Download the project directory from [GitHub](https://github.com/EdoardoGruppi/AMLS_assignment20_21)
+4. (Optional) Tensorflow enables to work directly on GPU without requiring explicity additional code.
    The only hardware requirement is having a Nvidia GPU card with Cuda enabled.
 
    To see if Tensorflow has detected a GPU run the following few lines.
@@ -14,17 +15,12 @@
    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
    ```
 
-   If not, there are lots of guides on the web to install everything you need. For instance take a look at
+   If not, there are lots of guides on the web to install everything you need. For instance you can take a look at
    [this](https://deeplizard.com/learn/video/IubEtS2JAiY).
 
-## cmake
+## Run the code
 
-[link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508)
-
-## How to compile
-
-Once all the necessary packages have been installed you can run the code by typing this line
-on the terminal:
+Once all the necessary packages have been installed you can run the code by typing this line on the terminal:
 
 ```
 python main.py
@@ -34,8 +30,7 @@ python main.py
 
 ### CelebA dataset
 
-The CelebA dataset provided contains 5000 celebrity images. Each one of them is associated
-to two labels that describe the celebrity gender and whether they are smiling.
+The CelebA dataset provided contains 5000 celebrity images. Each one of them is associated to two labels that describe the celebrity gender and whether they are smiling.
 
 The table below depicts how the two categories for each label are divided.
 
@@ -46,8 +41,7 @@ The table below depicts how the two categories for each label are divided.
 
 ### Cartoon_set dataset
 
-Cartoon_set dataset is made up of 10000 avatar images. They are obtained by choosing
-randomly the avatar traits between 10 artworks, 4 colors and 4 proportions.
+Cartoon_set dataset is made up of 10000 avatar images. They are obtained by choosing randomly the avatar traits between 10 artworks, 4 colors and 4 proportions.
 
 The following table summarizes how the examples are distributed amongst the five
 possibilities for both: eye color and face shape.
@@ -62,20 +56,8 @@ possibilities for both: eye color and face shape.
 
 ### Dataset division
 
-## Data Processing
-
-The random algorithm in `data_processing()` allows to achieve a fair division in both training
-and test dataset.
+The rule of thumb followed throughout the division of both the datasets consists in assigning 80\% of the images to the training and validation sets. The remaining part is reserved to the test set. This rule is usually related to the Pareto principle: 20\% of causes produce 80\% of effects. However, since the celebA dataset is slightly small, I have opted to move its ratio from 60:20:20 to 70:15:15 dedicating therefore more pictures to the training phase.
 
 ## Model
 
-## References
-
-```
-@article{citation-example,
-  title={Image-to-Image Translation},
-  author={Isola, Phillip and Zhu, Jun-Yan and Zhou, Tinghui and Efros, Alexei A},
-  journal={CVPR},
-  year={2017}
-}
-```
+In this project, several methodologies are proposed to deal with various tasks. Firstly, a CNN has been designed from scratch maintaining as lower as possible the simpleness of the network along with the memory requirements and the computational time. This architecture has been then adopted with minor amendments to solve the gender detection task (A1) as well as the eye-color (B2) and face-shape (B1) recognition problems. Finally, a different direction has been undertaken for smile detection (A2) leveraging on the efficacy of HOG and PCA algorithms along with the simpleness of a SVM as a classifier.
