@@ -19,37 +19,37 @@ Please note that the descriptions provided in this subsection are taken directly
 
 **Compulsory :**
 
-- `Pandas` provides fast, flexible, and expressive data structures designed to make working with structured and time series data both easy and intuitive.
+- **Pandas** provides fast, flexible, and expressive data structures designed to make working with structured and time series data both easy and intuitive.
 
-- `Numpy` is the fundamental package for array computing with Python.
+- **Numpy** is the fundamental package for array computing with Python.
 
-- `Tensorflow` is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs). **Important**: Recently Keras has been completely wrapped within Tensorflow.
+- **Tensorflow** is an open source software library for high performance numerical computation. Its allows easy deployment of computation across a variety of platforms (CPUs, GPUs, TPUs). **Important**: Recently Keras has been completely wrapped within Tensorflow.
 
-- `Pathlib` offers a set of classes to handle filesystem paths.
+- **Pathlib** offers a set of classes to handle filesystem paths.
 
-- `Shutil` provides a number of high-level operations on files and collections of files. In particular, functions are provided which support file copying and removal.
+- **Shutil** provides a number of high-level operations on files and collections of files. In particular, functions are provided which support file copying and removal.
 
-- `Os` provides a portable way of using operating system dependent functionality.
+- **Os** provides a portable way of using operating system dependent functionality.
 
-- `Matplotlib` is a comprehensive library for creating static, animated, and interactive visualizations in Python.
+- **Matplotlib** is a comprehensive library for creating static, animated, and interactive visualizations in Python.
 
-- `Sklearn` offers simple and efficient tools for predictive data analysis.
+- **Sklearn** offers simple and efficient tools for predictive data analysis.
 
-- `Skimage` is a collection of algorithms for image processing.
+- **Skimage** is a collection of algorithms for image processing.
 
-- `Random` implements pseudo-random number generators for various distributions.
+- **Random** implements pseudo-random number generators for various distributions.
 
-- `seaborn` is a data visualization library based on matplotlib that provides a high-level interface for drawing attractive and informative statistical graphics.
+- **Seaborn** is a data visualization library based on matplotlib that provides a high-level interface for drawing attractive and informative statistical graphics.
 
-- `cv2` is an open-source library that includes several hundreds of computer vision algorithms.
+- **Cv2** is an open-source library that includes several hundreds of computer vision algorithms.
 
-- `face_recognition` Recognize and manipulate faces with the world’s simplest face recognition library. Built from dlib’s state-of-the-art deep learning library.
+- **Face_recognition** Recognize and manipulate faces with the world’s simplest face recognition library. Built from dlib’s state-of-the-art deep learning library.
 
 **Optional :**
 
-- `comet_ml` helps to manage and track machine learning experiments.
+- **Comet_ml** helps to manage and track machine learning experiments.
 
-- `vprof` is a Python package providing rich and interactive visualizations for various Python program characteristics such as running time and memory usage.
+- **Vprof** is a Python package providing rich and interactive visualizations for various Python program characteristics such as running time and memory usage.
 
 ## Role of each file
 
@@ -63,11 +63,11 @@ Please note that the descriptions provided in this subsection are taken directly
 
 **b2.py** contains the class B2 from which to instantiate the CNN model used for eye-color recognition. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
 
-**pre_processing.py** provides crucial functions related to the data preparation. _data_preprocessing_: splits the original dataset in three different parts for training, validation and testing; rescales and reshapes images; applies data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. _hog_pca_preprocessing_ instead is called exclusively for Task A2. Primarily, it extracts meaningful features with the Histogram of Oriented Gradients (HOG) descriptor from a given image. Secondly, it separates datasets in three parts. Then, it normalizes features before reducing data dimensionality via the Principal Component Analysis (PCA) algorithm. The last function (_hog_pca_augmentation_preprocessing_) follows the process pipeline just described for Task A2 but allowing to apply data_augmentation on the training images.
+**pre_processing.py** provides crucial functions related to the data preparation. `data_preprocessing`: splits the original dataset in three different parts for training, validation and testing; rescales and reshapes images; applies data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. `hog_pca_preprocessing` instead is called exclusively for Task A2. Primarily, it extracts meaningful features with the Histogram of Oriented Gradients (HOG) descriptor from a given image. Secondly, it separates datasets in three parts. Then, it normalizes features before reducing data dimensionality via the Principal Component Analysis (PCA) algorithm. The last function `hog_pca_augmentation_preprocessing` follows the process pipeline just described for Task A2 but allowing to apply data_augmentation on the training images.
 
 **delete_glasses.py** includes the homonymous function to delete avatars that wear black sunglasses making not feasible the eye-color detection in the task B2. It employs a pre trained model created specifically and saved in the model_glasses directory within the Modules folder.
 
-**face_extraction.py** leverages the face*recognition package to extract faces or smiles through the \_face_extraction* and _smiles_extraction_ functions respectively. The latter is adopted during the images pre-processing of Task A2.
+**face_extraction.py** leverages the face_recognition package to extract faces or smiles through the `face_extraction` and `smiles_extraction` functions respectively. The latter is adopted during the images pre-processing of Task A2.
 
 **results_visualization.py** exploits the seaborn and matplotlib libraries to plot the performance and learning curves of the training phase and to generate confusion matrices summarizing the testing results.
 
