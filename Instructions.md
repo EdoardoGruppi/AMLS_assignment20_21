@@ -26,13 +26,13 @@ Once all the necessary packages have been installed you can run the code by typi
 python main.py
 ```
 
+**Note:** To follow step by step the main execution take a look on the dedicated Section below.
+
 ## Datasets
 
 ### CelebA dataset
 
-The CelebA dataset provided contains 5000 celebrity images. Each one of them is associated to two labels that describe the celebrity gender and whether they are smiling.
-
-The table below depicts how the two categories for each label are divided.
+The CelebA dataset provided contains 5000 celebrity images. Each one of them is associated to two labels that describe the celebrity gender and whether they are smiling. The table below depicts how the two categories for each label are divided.
 
 | Class | Gender | Smiling |
 | ----- | ------ | ------- |
@@ -41,10 +41,7 @@ The table below depicts how the two categories for each label are divided.
 
 ### Cartoon_set dataset
 
-Cartoon_set dataset is made up of 10000 avatar images. They are obtained by choosing randomly the avatar traits between 10 artworks, 4 colors and 4 proportions.
-
-The following table summarizes how the examples are distributed amongst the five
-possibilities for both: eye color and face shape.
+Cartoon_set dataset is made up of 10000 avatar images. They are obtained by choosing randomly the avatar traits between 10 artworks, 4 colors and 4 proportions. The following table summarizes how the examples are distributed amongst the five possibilities for both: eye color and face shape.
 
 | Class | Eye color | Face shape | Eye color (no black sunglasses) |
 | ----- | --------- | ---------- | ------------------------------- |
@@ -61,3 +58,9 @@ The rule of thumb followed throughout the division of both the datasets consists
 ## Model
 
 In this project, several methodologies are proposed to deal with various tasks. Firstly, a CNN has been designed from scratch maintaining as lower as possible the simpleness of the network along with the memory requirements and the computational time. This architecture has been then adopted with minor amendments to solve the gender detection task (A1) as well as the eye-color (B2) and face-shape (B1) recognition problems. Finally, a different direction has been undertaken for smile detection (A2) leveraging on the efficacy of HOG and PCA algorithms along with the simpleness of a SVM as a classifier.
+
+## Main execution
+
+```python
+data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
+```
