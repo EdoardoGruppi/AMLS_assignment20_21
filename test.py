@@ -32,11 +32,11 @@ from B2.b2 import B2
 # A2 SVM ===============================================================================================================
 # todo data_directory, variance=0.88
 # X_test, X_train, X_valid, y_test, y_train, y_valid = hog_pca_preprocessing(dataset_name=data_directory,
-#                                                                            img_size=(96, 48),
-#                                                                            validation_split=0.15,
-#                                                                            variance=0.90,
-#                                                                            training_size=0.85,
-#                                                                            target_column='smiling')
+#                                                                                     img_size=(96, 48),
+#                                                                                     validation_split=0.15,
+#                                                                                     variance=0.90,
+#                                                                                     training_size=0.85,
+#                                                                                     target_column='smiling')
 # # Build model object.
 # # todo 0.001, 10 or 'scale', 1
 # model_A2 = A2(kernel='rbf', gamma='scale', c=1, verbose=False)

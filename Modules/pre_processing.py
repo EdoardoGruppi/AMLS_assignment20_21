@@ -142,7 +142,7 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=validation_split)
     # Normalize values before using PCA
     sc = StandardScaler()
-    # Fit the StandardScaler with training data and apply the dimensionality reduction on them
+    # Fit the StandardScaler with training data
     x_train = sc.fit_transform(x_train)
     x_test = sc.transform(x_test)
     x_valid = sc.transform(x_valid)

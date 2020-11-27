@@ -8,14 +8,16 @@ CHANGE REFERENCES
 
 ## How to start
 
-A comprehensive guide is provided in the file [Instruction.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md).
+A comprehensive guide concerning how to run the code along with additional information is provided in the file [Instruction.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md).
+
+To first understand: which packages are required to the execution of the code, the role of each file or the software used read the Sections below.
 
 ## Packages required
 
 The following lists gather all the packages needed to run the project code.
 Please note that the descriptions provided in this subsection are taken directly from the package source pages. In order to have more details on them it is reccomended to directly reference to their official sites.
 
-Compulsory
+**Compulsory :**
 
 - `Pandas` provides fast, flexible, and expressive data structures designed to make working with structured and time series data both easy and intuitive.
 
@@ -43,7 +45,7 @@ Compulsory
 
 - `face_recognition` Recognize and manipulate faces with the world’s simplest face recognition library. Built from dlib’s state-of-the-art deep learning library.
 
-Optional
+**Optional :**
 
 - `comet_ml` helps to manage and track machine learning experiments.
 
