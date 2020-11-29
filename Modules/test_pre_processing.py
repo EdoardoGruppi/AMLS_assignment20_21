@@ -35,7 +35,7 @@ def test_data_preparation(data_directory, filename_column, target_column, batche
     return test_batches
 
 
-def hog_pca_preprocessing(dataset_name, pca, standard_scaler, img_size=(96, 48), target_column='smiling'):
+def test_hog_pca_preprocessing(dataset_name, pca, standard_scaler, img_size=(96, 48), target_column='smiling'):
     """
     Given a dataset it extracts HOG features from each image. Data dimensionality is then further reduced applying
     PCA algorithm.

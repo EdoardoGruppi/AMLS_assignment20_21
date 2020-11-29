@@ -1,10 +1,8 @@
 # Description of the project
 
-[Project](https://github.com/EdoardoGruppi/AMLS_assignment20_21.git)
+[Project](https://github.com/EdoardoGruppi/AMLS_assignment20_21.git) [Guide](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md)
 
-SHORT DESCRIPTION OF THE PROJECT
-
-CHANGE REFERENCES
+In this report, four distinct challenging scopes are addressed under the supervised machine learning paradigm. They comprise binary classification tasks for gender and smile detection along with multi-categorical classification tasks concerning eye-colour and face-shape recognition. Most notably, several methodologies are proposed to deal with these duties (see Models Section in [Instruction.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md) to have more details).
 
 ## How to start
 

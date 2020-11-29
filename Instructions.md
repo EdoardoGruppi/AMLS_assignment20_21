@@ -61,14 +61,121 @@ Cartoon_set dataset is made up of 10000 avatar images. They are obtained by choo
 
 The rule of thumb followed throughout the division of both the datasets consists in assigning 80\% of the images to the training and validation sets. The remaining part is reserved to the test set. This rule is usually related to the Pareto principle: 20\% of causes produce 80\% of effects. However, since the celebA dataset is slightly small, I have opted to move its ratio from 60:20:20 to 70:15:15 dedicating therefore more pictures to the training phase.
 
-## Model
+## Models
 
-In this project, several methodologies are proposed to deal with various tasks. Firstly, a CNN has been designed from scratch maintaining as lower as possible the simpleness of the network along with the memory requirements and the computational time. This architecture has been then adopted with minor amendments to solve the gender detection task (A1) as well as the eye-color (B2) and face-shape (B1) recognition problems. Finally, a different direction has been undertaken for smile detection (A2) leveraging on the efficacy of HOG and PCA algorithms along with the simpleness of a SVM as a classifier.
+In this project, several methodologies are proposed to deal with various tasks. Firstly, a CNN has been designed from scratch maintaining as lower as possible the simpleness of the network along with the memory requirements and the computational time. This architecture has been then adopted to perform the gender detection task (A1) as well as, with minor amendments, the eye-color (B2) and face-shape (B1) recognition problems. Finally, a different direction has been undertaken for smile detection (A2) leveraging on the efficacy of HOG and PCA algorithms along with the simpleness of a SVM as a classifier.
 
 ## Main execution
 
+Before the code execution, the Datasets folder must have the following structure.
+
+![image](https://user-images.githubusercontent.com/48513387/100546886-065feb80-3264-11eb-97a5-fc698833878b.png)
+
+The celeba and cartoon_set folders contain the starting datasets from which training, validation and test sets are generated. The others folders instead contain a second larger test dataset provided subsequently. At the beginning the `smiles_extraction` function extracts smiles from the orignial celeba dataset and the final celeba test dataset. The images generated are saved in the celeba_smiles and celeba_test_smiles folder. They will be used in the Task A2.
+
 ```python
 data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
+test_directory, faces_not_detected1 = smiles_extraction(dataset_name='celeba_test')
+```
+
+![image](https://user-images.githubusercontent.com/48513387/100548200-66a65b80-326b-11eb-9453-c8e02ce3042e.png)
+
+Then, the Task A1 execution starts. Batches are prepared through the `data_preprocessing` function and the original dataset is divided in train, validation and test sets. For this purpose a new folder (celeba_testing) is created to contain the first test dataset.
+
+```python
+training_batches, valid_batches, test_batches = data_preprocessing(...)
+```
+
+![image](https://user-images.githubusercontent.com/48513387/100548250-aa00ca00-326b-11eb-8bff-6b60d54a45ad.png)
+
+The model is therefore trained, validated and tested on the original dataset.
+
+```python
+# Build model object.
+model_A1 = A1(...)
+# Train model based on the training set
+acc_A1_train, acc_A1_valid = model_A1.train(...)
+# Test model based on the test set.
+acc_A1_test = model_A1.test(...)
+```
+
+Hence it is also tested on the second test set. Finally, memory is cleaned.
+
+```python
+# Test the model on the second larger test dataset provided
+test_batches = test_data_preparation(...)
+acc_A1_test2 = model_A1.test(...)
+# Print out your results with following format:
+print('TA1: {}, {}, {}, {}'.format(acc_A1_train, acc_A1_valid, acc_A1_test, acc_A1_test2))
+# Clean up memory/GPU etc
+del ...
+```
+
+Task A2 starts. Examples in the celeba_smiles folder and their related labels are divided in three parts by means of the `hog_pca_preprocessing` function. Then the model is trained, validated and tested on them. Finally, it is also tested on the second test set and memory is cleaned.
+
+```python
+X_test, X_train, X_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocessing(...)
+# Build model object.
+model_A2 = A2(...)
+# Train model based on the training set
+acc_A2_train, acc_A2_valid = model_A2.train(...)
+# Test model based on the test set.
+acc_A2_test = model_A2.test(...)
+# Test the model on the second larger test dataset provided
+x_test, y_test = test_hog_pca_preprocessing(...)
+acc_A2_test2 = model_A2.test(...)
+# Print out your results with following format:
+print('TA2: {}, {}, {}, {}'.format(acc_A2_train, acc_A2_valid, acc_A2_test, acc_A2_test2))
+# Clean up memory/GPU etc
+del ...
+```
+
+At the begnning of Task B1 the `data_preprocessing` splits the dataset and create a new folder (cartoon_set_testing) for the first dataset of the cartoon_set.
+
+```python
+training_batches, valid_batches, test_batches = data_preprocessing(...)
+```
+
+![image](https://user-images.githubusercontent.com/48513387/100548294-e7655780-326b-11eb-82cf-223a889ad98b.png)
+
+The dedicated model follows the same procedure of the previous ones.
+
+```python
+# Build model object.
+model_B1 = B1(input_shape)
+# Train model based on the training set
+acc_B1_train, acc_B1_valid = model_B1.train(...)
+# Test model based on the test set.
+acc_B1_test = model_B1.test(...)
+# Test the model on the second larger test dataset provided
+test_batches = test_data_preparation(...)
+acc_B1_test2 = model_B1.test(...)
+# Print out your results with following format:
+print('TB1: {}, {}, {}, {}'.format(acc_B1_train, acc_B1_valid, acc_B1_test, acc_B1_test2))
+# Clean up memory/GPU etc
+del ...
+```
+
+Once Task B1 is performed the `delete_glasses` function remove all the avatars in the various cartoon_set folders that wear balck sunglasses and move them into a dedicated folder called cartoon_set_removed.
+
+![image](https://user-images.githubusercontent.com/48513387/100548328-1a0f5000-326c-11eb-9a08-b94832b642f2.png)
+
+Again the specific model follows the same process.
+
+```python
+# Build model object.
+model_B2 = B2(input_shape)
+# Train model based on the training set
+acc_B2_train, acc_B2_valid = model_B2.train(...)
+# Test model based on the test set.
+acc_B2_test = model_B2.test(...)
+# Test the model on the second larger test dataset provided
+test_batches = test_data_preparation(...)
+acc_B2_test2 = model_B2.test(...)
+# Print out your results with following format:
+print('TB2: {}, {}, {}, {}'.format(acc_B2_train, acc_B2_valid, acc_B2_test, acc_B2_test2))
+# Clean up memory/GPU etc
+del ...
 ```
 
 ## Issues
