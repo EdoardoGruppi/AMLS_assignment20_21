@@ -11,7 +11,7 @@
 # acc_A1_train = model_A1.train(data_train, data_val, epochs=10, verbose=2)
 # # Test model based on the test set.
 # acc_A1_test = model_A1.test(data_test, verbose=1, confusion_mesh=True)
-# # todo Clean up memory/GPU etc...Some code to free memory if necessary.
+# Clean up memory/GPU etc...Some code to free memory if necessary.
 
 
 # ======================================================================================================================

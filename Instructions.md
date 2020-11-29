@@ -3,20 +3,26 @@
 ## Setup
 
 1. Install Tensorflow and all the other packages appointed in the README.md file.
-2. To install the face_recognition packet may be necessary to install dlib and cmake before. [Here](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508) is a complete progressione.
-3. Download the project directory from [GitHub](https://github.com/EdoardoGruppi/AMLS_assignment20_21)
-4. (Optional) Tensorflow enables to work directly on GPU without requiring explicity additional code.
-   The only hardware requirement is having a Nvidia GPU card with Cuda enabled.
-
-   To see if Tensorflow has detected a GPU run the following few lines.
+2. To install the face_recognition packet may be necessary to install dlib and cmake before. [At this link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508) a complete guide is provided.
+3. Download the project directory from [GitHub](https://github.com/EdoardoGruppi/AMLS_assignment20_21).
+4. Tensorflow enables to work directly on GPU without requiring explicity additional code. The only hardware requirement is having a Nvidia GPU card with Cuda enabled. To see if Tensorflow has detected a GPU run the following few lines.
 
    ```python
    import tensorflow as tf
    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
    ```
 
-   If not, there are lots of guides on the web to install everything you need. For instance you can take a look at
+   If not, there are lots of guides on the web to install everything you need. For instance, you can take a look at
    [this](https://deeplizard.com/learn/video/IubEtS2JAiY).
+
+5. Finally, it is crucial to run the code below since Tensorflow tends to allocate directly all the GPU memory even if is not entirely needed. With these lines instead, it will allocate gradually the memory needed by the program.
+
+   ```python
+   if len(physical_devices) is not 0:
+      tf.config.experimental.set_memory_growth(physical_devices[0], True)
+   ```
+
+   **Note:** during the several experiments conducted, each execution has needed only 0.9 GB of GPU memory. Furthermore, the instruments provided by Tensorflow make the GPU management during the execution significantly difficult. Therefore, differently from the main memory, no instructions has been written to deallocate dinamically the GPU memory. Nevertheless, if it is necessary a possible solution is proposed in the Issues Section below.
 
 ## Run the code
 
@@ -64,3 +70,7 @@ In this project, several methodologies are proposed to deal with various tasks. 
 ```python
 data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
 ```
+
+## Issues
+
+- If the device's GPU memory is not enough to run the code, it is possible to execute the training of each model inside a dedicated subprocess. Tensorflow then will release the part of GPU memory used by each subprocess as soon as it ends.

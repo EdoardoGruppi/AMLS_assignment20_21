@@ -99,7 +99,8 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     :param validation_split: percentage size of the entire dataset dedicated to the validation set. default_value=0.15.
     :param variance: the amount of variance to capture. default_value=0.95.
     :return: dataset and labels divided in training, validation and test parts. To each image is associated
-        a reduced vector of features thanks to HOG and PCA algorithms.
+        a reduced vector of features thanks to HOG and PCA algorithms. It returns also the pca and sc fitted on the
+        training dataset so that it can applied on separate test datasets.
     """
     # Create path to access to all the images
     path = './Datasets/{}'.format(dataset_name)
@@ -152,7 +153,7 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     x_valid = pca.transform(x_valid)
     x_test = pca.transform(x_test)
     print('Data dimensionality after PCA: {}'.format(pca.n_components_))
-    return x_test, x_train, x_valid, y_test, y_train, y_valid
+    return x_test, x_train, x_valid, y_test, y_train, y_valid, pca, sc
 
 
 def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15, variance=0.95,
@@ -168,7 +169,8 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
     :param validation_split: percentage size of the entire dataset dedicated to the validation set. default_value=0.15
     :param variance: the amount of variance to capture. default_value=0.95.
     :return: dataset and labels divided in training, validation and test parts. To each image is associated
-        a reduced vector of features thanks to HOG and PCA algorithms.
+        a reduced vector of features thanks to HOG and PCA algorithms. It returns also the pca and sc fitted on the
+        training dataset so that it can applied on separate test datasets.
     """
     # Create path to access to all the images
     path = './Datasets/{}'.format(dataset_name)
@@ -228,11 +230,9 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
         # Append the HOG features vector to the feature map
         feature_matrix.append(hog_feature)
         names.append(file)
-
     # Retrieve labels
     y_train = dataset_labels.iloc[[file.split('.')[0] for file in names]]
     x_train = np.array(feature_matrix)
-
     print('Computing PCA...')
     print('Data dimensionality before PCA: {}'.format(len(feature_matrix[0])))
     pca = PCA(n_components=variance)
@@ -247,4 +247,4 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
     x_valid = pca.transform(x_valid)
     x_test = pca.transform(x_test)
     print('Data dimensionality after PCA: {}'.format(pca.n_components_))
-    return x_test, x_train, x_valid, y_test, y_train, y_valid
+    return x_test, x_train, x_valid, y_test, y_train, y_valid, pca, sc

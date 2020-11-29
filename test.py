@@ -8,6 +8,13 @@ from A2.a2 import A2
 from B1.b1 import B1
 from B2.b2 import B2
 
+# set_memory_growth() allocates exclusively the GPU memory needed
+import tensorflow as tf
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+print("Num GPUs Available: ", len(physical_devices))
+if len(physical_devices) is not 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
 # A1 ===================================================================================================================
 # Extract smiles for A2 task before dividing all the images in 'celeba' in training and test images.
 # data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
@@ -21,17 +28,18 @@ from B2.b2 import B2
 # # Build model object.
 # model_A1 = A1(input_shape)
 # # Train model based on the training set
-# acc_A1_train, acc_A1_valid = model_A1.train(training_batches, valid_batches, epochs=25, verbose=2, plot=True)
-# # # Used only in test.py
-# # model_A1.evaluate(test_batches=test_batches, verbose=1)
+# acc_A1_train, acc_A1_valid = model_A1.train(training_batches, valid_batches, epochs=1, verbose=2, plot=True)
 # # Test model based on the test set.
-# acc_A1_test = model_A1.test(test_batches, verbose=1, confusion_mesh=True)
+# acc_A1_test = model_A1.test(test_batches, verbose=25, confusion_mesh=True)
 # # Print out your results with following format:
 # print('TA1:{},{},{}'.format(acc_A1_train, acc_A1_valid, acc_A1_test))
-# #
+# # Clean up memory/GPU etc
+# del acc_A1_train, acc_A1_valid, acc_A1_test, model_A1, physical_devices, faces_not_detected
+#
+#
 # A2 SVM ===============================================================================================================
 # todo data_directory, variance=0.88
-# X_test, X_train, X_valid, y_test, y_train, y_valid = hog_pca_preprocessing(dataset_name=data_directory,
+# X_test, X_train, X_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocessing(dataset_name=data_directory,
 #                                                                                     img_size=(96, 48),
 #                                                                                     validation_split=0.15,
 #                                                                                     variance=0.90,
@@ -46,6 +54,9 @@ from B2.b2 import B2
 # acc_A2_test = model_A2.test(X_test, y_test, confusion_mesh=True)
 # # Print out your results with following format:
 # print('TA2:{},{},{}'.format(acc_A2_train, acc_A2_valid, acc_A2_test))
+# # Clean up memory/GPU etc
+# del acc_A2_train, acc_A2_valid, acc_A2_test, X_test, X_train, X_valid, y_test, y_train, y_valid, data_directory, \
+#     model_A2, pca, sc
 #
 # B1 ===================================================================================================================
 # training_batches, valid_batches, test_batches = data_preprocessing(data_directory='cartoon_set',
@@ -59,12 +70,12 @@ from B2.b2 import B2
 # model_B1 = B1(input_shape)
 # # Train model based on the training set
 # acc_B1_train, acc_B1_valid = model_B1.train(training_batches, valid_batches, epochs=10, verbose=2, plot=True)
-# # # Used only in test.py
-# # model_B1.evaluate(test_batches=test_batches, verbose=1)
 # # Test model based on the test set.
-# acc_B1_test = model_B1.test(test_batches, verbose=1, confusion_mesh=True)
+# acc_B1_test = model_B1.test(test_batches, verbose=10, confusion_mesh=True)
 # # Print out your results with following format:
 # print('TB1:{},{},{}'.format(acc_B1_train, acc_B1_valid, acc_B1_test))
+# # Clean up memory/GPU etc
+# del acc_B1_train, acc_B1_valid, acc_B1_test, model_B1
 #
 # B2 ===================================================================================================================
 # To execute after the B1 Task!
@@ -81,8 +92,6 @@ from B2.b2 import B2
 # model_B2 = B2(input_shape)
 # # Train model based on the training set
 # acc_B2_train, acc_B2_valid = model_B2.train(training_batches, valid_batches, epochs=10, verbose=2, plot=True)
-# # # Used only in test.py
-# # model_B2.evaluate(test_batches=test_batches, verbose=1)
 # # Test model based on the test set.
 # acc_B2_test = model_B2.test(test_batches, verbose=1, confusion_mesh=True)
 # # Print out your results with following format:
