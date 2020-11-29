@@ -26,13 +26,13 @@
 
 ## Run the code
 
-Once all the necessary packages have been installed you can run the code by typing this line on the terminal:
+Once all the necessary packages have been installed you can run the code by typing this line on the terminal.
+
+**Note:** To follow step by step the main execution take a look on the dedicated Section below.
 
 ```
 python main.py
 ```
-
-**Note:** To follow step by step the main execution take a look on the dedicated Section below.
 
 ## Datasets
 
@@ -71,7 +71,7 @@ Before the code execution, the Datasets folder must have the following structure
 
 ![image](https://user-images.githubusercontent.com/48513387/100546886-065feb80-3264-11eb-97a5-fc698833878b.png)
 
-The celeba and cartoon_set folders contain the starting datasets from which training, validation and test sets are generated. The others folders instead contain a second larger test dataset provided subsequently. At the beginning the `smiles_extraction` function extracts smiles from the orignial celeba dataset and the final celeba test dataset. The images generated are saved in the celeba_smiles and celeba_test_smiles folder. They will be used in the Task A2.
+The celeba and cartoon_set folders contain the starting datasets from which training, validation and test sets are generated. The others folders instead contain a second larger test dataset provided subsequently. At the beginning the `smiles_extraction` function extracts smiles from the original celeba dataset and the final celeba test dataset. The images generated are saved in the celeba_smiles and celeba_test_smiles folders. They will be used in the Task A2.
 
 ```python
 data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
@@ -80,7 +80,7 @@ test_directory, faces_not_detected1 = smiles_extraction(dataset_name='celeba_tes
 
 ![image](https://user-images.githubusercontent.com/48513387/100548200-66a65b80-326b-11eb-9453-c8e02ce3042e.png)
 
-Then, the Task A1 execution starts. Batches are prepared through the `data_preprocessing` function and the original dataset is divided in train, validation and test sets. For this purpose a new folder (celeba_testing) is created to contain the first test dataset.
+Then, the Task A1 execution starts. Batches are prepared through the `data_preprocessing` function and the original dataset is divided in train, validation and test sets. A new folder (celeba_testing) is created to contain the first test dataset.
 
 ```python
 training_batches, valid_batches, test_batches = data_preprocessing(...)
@@ -156,7 +156,7 @@ print('TB1: {}, {}, {}, {}'.format(acc_B1_train, acc_B1_valid, acc_B1_test, acc_
 del ...
 ```
 
-Once Task B1 is performed the `delete_glasses` function remove all the avatars in the various cartoon_set folders that wear balck sunglasses and move them into a dedicated folder called cartoon_set_removed.
+Once Task B1 is performed the `delete_glasses` function removes all the avatars in the various cartoon_set folders that wear balck sunglasses and move them into a dedicated folder called cartoon_set_removed.
 
 ![image](https://user-images.githubusercontent.com/48513387/100548328-1a0f5000-326c-11eb-9a08-b94832b642f2.png)
 
