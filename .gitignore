@@ -8,7 +8,6 @@ Notes.md
 Modules/glasses_model
 B2/__pycache__
 B2/glasses_model_Originale
-viola_jones.py
 haarcascade_frontalface_default.xml
 haarcascade_smile.xml
 Viola Jones

@@ -4,6 +4,10 @@
 
 1. Install Tensorflow and all the other packages appointed in the README.md file.
 2. To install the face_recognition packet may be necessary to install dlib and cmake before. [At this link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508) a complete guide is provided.
+   Hence, run this command to install the package. 
+   ```python
+   pip install face-recognition
+   ```
 3. Download the project directory from [GitHub](https://github.com/EdoardoGruppi/AMLS_assignment20_21).
 4. Tensorflow enables to work directly on GPU without requiring explicity additional code. The only hardware requirement is having a Nvidia GPU card with Cuda enabled. To see if Tensorflow has detected a GPU run the following few lines.
 

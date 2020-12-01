@@ -22,10 +22,10 @@ def test_data_preparation(data_directory, filename_column, target_column, batche
     """
     # Loading the csv file
     # The sep parameter chosen according to the delimiter adopted in labels.csv
-    path = './Datasets/{}_test'.format(data_directory)
-    test_info = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')
+    path = os.path.join('./Datasets', data_directory + '_test')
+    test_info = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')
     # Retrieve folder where images are located
-    test_dir = '{}/img'.format(path)
+    test_dir = os.path.join(path, 'img')
     # ImageDataGenerator generates batches of images in real-time
     image_generator = ImageDataGenerator(rescale=1. / 255.)
     test_batches = image_generator.flow_from_dataframe(dataframe=test_info, directory=test_dir,
@@ -49,24 +49,25 @@ def test_hog_pca_preprocessing(dataset_name, pca, standard_scaler, img_size=(96,
         features by the means of to HOG and PCA algorithms.
     """
     # Create path to access to all the images
-    path = './Datasets/{}_test'.format(dataset_name)
-    images_dir = '{}/img'.format(path)
+    path = os.path.join('./Datasets', dataset_name + '_test')
+    images_dir = os.path.join(path, 'img')
     # List all the images within the folder
     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
-    test_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')[target_column]
+    test_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')[target_column]
     feature_matrix = []
     # Counter inserted to display the execution status
     counter = 0
     print('\nExtracting features from test folder...')
     for file in files:
         counter += 1
-        img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(os.path.join(images_dir, file), cv2.IMREAD_GRAYSCALE)
         # Resize the image in case it has a different size than the expected
         img = cv2.resize(img, img_size)
         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
                           multichannel=False, feature_vector=True)
         # Append the HOG features vector to the feature map
         feature_matrix.append(hog_feature)
+        # Every 1000 images processed display the following output
         if counter % 1000 == 0:
             print('Images processed: {}'.format(counter))
 

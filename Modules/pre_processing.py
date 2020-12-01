@@ -34,16 +34,16 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     """
     # Loading the csv file
     # The sep parameter chosen according to the delimiter adopted in labels.csv
-    path = './Datasets/{}'.format(data_directory)
-    dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')
+    path = os.path.join('./Datasets', data_directory)
+    dataset_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')
     # Divide data in two sets: one for training and one for testing
-    training_dir = '{}/img'.format(path)
-    test_dir = '{}_testing/img'.format(path)
+    training_dir = os.path.join(path, 'img')
+    test_dir = os.path.join(path + '_testing', 'img')
     # Division will be made only if the testing directory does not already exist
     if not os.path.isdir(test_dir):
         # Create the Test dataset folder
         # If parents is True, any missing parents of the folder will be created
-        # If exist_ok is True, an Error is raised if the directory already exists
+        # If exist_ok is True, an Error is not raised if the directory already exists
         Path(test_dir).mkdir(parents=True, exist_ok=True)
         # Sorted list of all the images available
         files = sorted(os.listdir(training_dir), key=lambda x: int(x.split(".")[0]))
@@ -103,18 +103,18 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
         training dataset so that it can applied on separate test datasets.
     """
     # Create path to access to all the images
-    path = './Datasets/{}'.format(dataset_name)
-    images_dir = '{}/img'.format(path)
+    path = os.path.join('./Datasets', dataset_name)
+    images_dir = os.path.join(path, 'img')
     # List all the images within the folder
     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
-    dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')[target_column]
+    dataset_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')[target_column]
     feature_matrix = []
     # Counter inserted to display the execution status
     counter = 0
     print('\nExtracting features...')
     for file in files:
         counter += 1
-        img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(os.path.join(images_dir, file), cv2.IMREAD_GRAYSCALE)
         # Resize the image in case it has a different size than the expected
         img = cv2.resize(img, img_size)
         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
@@ -173,11 +173,11 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
         training dataset so that it can applied on separate test datasets.
     """
     # Create path to access to all the images
-    path = './Datasets/{}'.format(dataset_name)
-    images_dir = '{}/img'.format(path)
+    path = os.path.join('./Datasets', dataset_name)
+    images_dir = os.path.join(path, 'img')
     # List all the images within the folder
     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
-    dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str')[target_column]
+    dataset_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')[target_column]
     # Divide dataset in three parts
     # Simple random sampling to select examples for the test dataset
     # Augmentation not applied on test and validation sets
@@ -186,7 +186,7 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
     feature_matrix = []
     print('Extracting features from validation and test sets...')
     for file in valid_test_images:
-        img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(os.path.join(images_dir, file), cv2.IMREAD_GRAYSCALE)
         # Resize the image in case it has a different size than the expected
         img = cv2.resize(img, img_size)
         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
@@ -210,7 +210,7 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
     names = []
     print('Extracting features from training set...\nApplying data augmentation...')
     for file in training_images:
-        img = cv2.imread(images_dir + '/' + file, cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(os.path.join(images_dir, file), cv2.IMREAD_GRAYSCALE)
         # Resize the image in case it has a different size than the expected
         img = cv2.resize(img, img_size)
         hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),

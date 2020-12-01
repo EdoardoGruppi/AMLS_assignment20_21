@@ -2,10 +2,11 @@
 from _Additional_code.glasses_data_preparation import glasses_data_preprocessing
 from _Additional_code.model_glasses import ModelGlasses
 from shutil import move, rmtree
+import os
 
 # Model Glasses ========================================================================================================
 # Remove model already saved in the Modules folder
-# rmtree('../Modules/model_glasses', ignore_errors=True)
+# rmtree(os.path.join('../Modules', 'model_glasses'), ignore_errors=True)
 training_batches, valid_batches, test_batches = glasses_data_preprocessing(data_directory='cartoon_glasses',
                                                                            filename_column='file_name',
                                                                            target_column='glasses', img_size=(224, 224),

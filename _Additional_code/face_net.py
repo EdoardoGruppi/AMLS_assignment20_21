@@ -15,10 +15,10 @@ def face_net(data_directory, required_size=(100, 100)):
     :return: list of files where faces are not detected.
     """
     # Dataset path
-    path = './Datasets/{}'.format(data_directory)
-    dataset_dir = '{}/img'.format(path)
+    path = os.path.join('./Datasets', data_directory)
+    dataset_dir = os.path.join(path, 'img')
     # Create directory for extracted faces images
-    viola_dir = '{}_faceNet/img'.format(path)
+    viola_dir = os.path.join(path + '_faceNet', 'img')
     Path(viola_dir).mkdir(parents=True, exist_ok=True)
     # List of all the images available
     files = sorted(os.listdir(dataset_dir), key=lambda x: int(x.split(".")[0]))

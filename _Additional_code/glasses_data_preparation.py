@@ -28,10 +28,10 @@ def glasses_data_preprocessing(data_directory, filename_column, target_column, t
         :return: the training, validation and test batches.
     """
     # Loading the csv file
+    path = os.path.join('../Datasets', data_directory)
     # The sep parameter chosen according to the delimiter adopted in labels.csv
-    path = '../Datasets/{}'.format(data_directory)
     # Take the first 600 examples
-    dataset_labels = pd.read_csv('{}/labels.csv'.format(path), sep='\t', dtype='str').head(600)
+    dataset_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str').head(600)
     dataset_labels[target_column] = list(map(str, [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,
                                                    0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0,
                                                    0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1,
@@ -65,8 +65,8 @@ def glasses_data_preprocessing(data_directory, filename_column, target_column, t
                                                    0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0
                                                    ]))
     # Divide data in two sets: one for training and one for testing
-    train_folder = '{}/img'.format(path)
-    test_folder = '{}_test/img'.format(path)
+    train_folder = os.path.join(path, 'img')
+    test_folder = os.path.join(path + '_test', 'img')
     # Division will be made only if the testing directory does not already exist
     if not os.path.isdir(test_folder):
         # Create the Test dataset folder

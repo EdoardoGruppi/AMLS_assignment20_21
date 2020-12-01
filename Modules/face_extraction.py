@@ -17,15 +17,15 @@ def smiles_extraction(dataset_name, img_size=(96, 48)):
         :return: the name of the novel folder and the list of files where no smiles are detected.
     """
     # Dataset path
-    path = './Datasets/{}'.format(dataset_name)
-    dataset_directory = '{}/img'.format(path)
+    path = os.path.join('./Datasets', dataset_name)
+    dataset_directory = os.path.join(path, 'img')
     # Create the name of the data_directory to return
     data_directory = '{}_smiles'.format(path)
     # Create directory for extracted faces images
-    faces_directory = '{}/img'.format(data_directory)
+    faces_directory = os.path.join(data_directory, 'img')
     Path(faces_directory).mkdir(parents=True, exist_ok=True)
     # copy the labels.csv file into the new folder
-    copy2('{}/labels.csv'.format(path), data_directory)
+    copy2(os.path.join(path, 'labels.csv'), data_directory)
     # List of all the images available
     files = sorted(os.listdir(dataset_directory), key=lambda x: int(x.split(".")[0]))
     # Extract face for each image in the directory
@@ -60,7 +60,7 @@ def smiles_extraction(dataset_name, img_size=(96, 48)):
             # Resize the region of interest and save in the created directory
             resized = cv2.resize(face_image, img_size)
             cv2.imwrite(os.path.join(faces_directory, file), resized)
-    return data_directory.split('/')[-1], files_not_detected
+    return data_directory.split(os.sep)[-1], files_not_detected
 
 
 def faces_extraction(dataset_name, img_size=(96, 96)):
@@ -73,15 +73,15 @@ def faces_extraction(dataset_name, img_size=(96, 96)):
         :return: the name of the novel folder and the list of files where no faces are detected.
     """
     # Dataset path
-    path = './Datasets/{}'.format(dataset_name)
-    dataset_directory = '{}/img'.format(path)
+    path = os.path.join('./Datasets', dataset_name)
+    dataset_directory = os.path.join(path, 'img')
     # Create the name of the data_directory to return
     data_directory = '{}_faces'.format(path)
     # Create directory for extracted faces images
-    faces_directory = '{}/img'.format(data_directory)
+    faces_directory = os.path.join(data_directory, 'img')
     Path(faces_directory).mkdir(parents=True, exist_ok=True)
     # copy the labels.csv file into the new folder
-    copy2('{}/labels.csv'.format(path), data_directory)
+    copy2(os.path.join(path, 'labels.csv'), data_directory)
     # List of all the images available
     files = sorted(os.listdir(dataset_directory), key=lambda x: int(x.split(".")[0]))
     # Extract face for each image in the directory
@@ -114,4 +114,4 @@ def faces_extraction(dataset_name, img_size=(96, 96)):
             # Resize the region of interest and save in the created directory
             resized = cv2.resize(face_image, img_size)
             cv2.imwrite(os.path.join(faces_directory, file), resized)
-    return data_directory.split('/')[-1], files_not_detected
+    return data_directory.split(os.sep)[-1], files_not_detected
