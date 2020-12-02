@@ -61,6 +61,8 @@ Please note that the descriptions provided in this subsection are taken directly
 
 **b2.py** contains the class B2 from which to instantiate the CNN model used for eye-color recognition. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
 
+**config.py** makes available all the global variables used in the project.
+
 **pre_processing.py** provides crucial functions related to the data preparation. `data_preprocessing`: splits the original dataset in three different parts for training, validation and testing; rescales and reshapes images; applies data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. `hog_pca_preprocessing` instead is called exclusively for Task A2. Primarily, it extracts meaningful features with the Histogram of Oriented Gradients (HOG) descriptor from a given image. Secondly, it separates datasets in three parts. Then, it normalizes features before reducing data dimensionality via the Principal Component Analysis (PCA) algorithm. The last function `hog_pca_augmentation_preprocessing` follows the process pipeline just described for Task A2 but allowing to apply data_augmentation on the training images.
 
 **delete_glasses.py** includes the homonymous function to delete avatars that wear black sunglasses making not feasible the eye-color detection in the task B2. It employs a pre trained model created specifically and saved in the model_glasses directory within the Modules folder.
@@ -71,7 +73,7 @@ Please note that the descriptions provided in this subsection are taken directly
 
 **test_pre_processing.py** contains functions to prepare the test batches starting from the test datasets provided subsequently.
 
-**\_Additional_code folder** includes some .py files of the most noteworthy experiments conducted during the project. In particular, `model_glasses.py`, `main_glasses.py` and `glasses_data_preparation.py` show the code employed to create from scratch the pre-trained model used to remove avatars with black glasses in Task B2 . `face_net.py` and `viola_jones.py` are some alternatives taken into account to extract smiles in Task A2. `normalizing.py` instead has been considered to normalize images (featurewise) before training the models. It returns the mean and the stdandard deviation computed on all the images in a given folder.
+**\_Additional_code folder** includes some .py files of the most noteworthy experiments conducted during the project. In particular, `model_glasses.py`, `main_glasses.py` and `glasses_data_preparation.py` show the code employed to create from scratch the pre-trained model used to remove avatars with black glasses in Task B2 . `face_net.py` and `viola_jones.py` are some alternatives taken into account to extract smiles in Task A2. `normalizing.py` instead has been considered to normalize images (featurewise) before training the models. It returns the mean and the standard deviation computed on all the images in a given folder.
 
 ## Software used
 

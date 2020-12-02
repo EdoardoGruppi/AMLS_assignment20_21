@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from skimage.feature import hog
 from sklearn.preprocessing import StandardScaler
+from Modules.config import *
 
 
 def data_preprocessing(data_directory, filename_column, target_column, training_percentage_size=0.85, batches_size=16,
@@ -34,8 +35,8 @@ def data_preprocessing(data_directory, filename_column, target_column, training_
     """
     # Loading the csv file
     # The sep parameter chosen according to the delimiter adopted in labels.csv
-    path = os.path.join('./Datasets', data_directory)
-    dataset_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')
+    path = os.path.join(base_dir, data_directory)
+    dataset_labels = pd.read_csv(os.path.join(path, labels_filename), sep='\t', dtype='str')
     # Divide data in two sets: one for training and one for testing
     training_dir = os.path.join(path, 'img')
     test_dir = os.path.join(path + '_testing', 'img')
@@ -103,11 +104,11 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
         training dataset so that it can applied on separate test datasets.
     """
     # Create path to access to all the images
-    path = os.path.join('./Datasets', dataset_name)
+    path = os.path.join(base_dir, dataset_name)
     images_dir = os.path.join(path, 'img')
     # List all the images within the folder
     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
-    dataset_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')[target_column]
+    dataset_labels = pd.read_csv(os.path.join(path, labels_filename), sep='\t', dtype='str')[target_column]
     feature_matrix = []
     # Counter inserted to display the execution status
     counter = 0
@@ -173,11 +174,11 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
         training dataset so that it can applied on separate test datasets.
     """
     # Create path to access to all the images
-    path = os.path.join('./Datasets', dataset_name)
+    path = os.path.join(base_dir, dataset_name)
     images_dir = os.path.join(path, 'img')
     # List all the images within the folder
     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
-    dataset_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')[target_column]
+    dataset_labels = pd.read_csv(os.path.join(path, labels_filename), sep='\t', dtype='str')[target_column]
     # Divide dataset in three parts
     # Simple random sampling to select examples for the test dataset
     # Augmentation not applied on test and validation sets

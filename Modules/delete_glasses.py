@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import shutil
 import os
 from pathlib import Path
+from Modules.config import *
 
 
 def delete_glasses(dataset_name, img_size=(224, 224)):
@@ -17,7 +18,7 @@ def delete_glasses(dataset_name, img_size=(224, 224)):
     """
     # Load the pre trained model in the Modules folder
     model_ModelGlasses = models.load_model(os.path.join('./Modules', 'model_glasses'))
-    dataset_path = os.path.join('./Datasets', dataset_name)
+    dataset_path = os.path.join(base_dir, dataset_name)
     removed_images = os.path.join(dataset_path + '_removed')
     # If parents is True, any missing parents of the folder will be created
     # If exist_ok is True, an Error is not raised if the directory already exists

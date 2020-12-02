@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import cv2
 import numpy as np
 from skimage.feature import hog
+from Modules.config import *
 
 
 def test_data_preparation(data_directory, filename_column, target_column, batches_size=16, img_size=(96, 96),
@@ -22,8 +23,8 @@ def test_data_preparation(data_directory, filename_column, target_column, batche
     """
     # Loading the csv file
     # The sep parameter chosen according to the delimiter adopted in labels.csv
-    path = os.path.join('./Datasets', data_directory + '_test')
-    test_info = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')
+    path = os.path.join(base_dir, data_directory + '_test')
+    test_info = pd.read_csv(os.path.join(path, labels_filename), sep='\t', dtype='str')
     # Retrieve folder where images are located
     test_dir = os.path.join(path, 'img')
     # ImageDataGenerator generates batches of images in real-time
@@ -49,11 +50,11 @@ def test_hog_pca_preprocessing(dataset_name, pca, standard_scaler, img_size=(96,
         features by the means of to HOG and PCA algorithms.
     """
     # Create path to access to all the images
-    path = os.path.join('./Datasets', dataset_name + '_test')
+    path = os.path.join(base_dir, dataset_name + '_test')
     images_dir = os.path.join(path, 'img')
     # List all the images within the folder
     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
-    test_labels = pd.read_csv(os.path.join(path, 'labels.csv'), sep='\t', dtype='str')[target_column]
+    test_labels = pd.read_csv(os.path.join(path, labels_filename), sep='\t', dtype='str')[target_column]
     feature_matrix = []
     # Counter inserted to display the execution status
     counter = 0
