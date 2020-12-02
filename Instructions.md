@@ -51,7 +51,7 @@ The CelebA dataset provided contains 5000 celebrity images. Each one of them is 
 
 ### Cartoon_set dataset
 
-Cartoon_set dataset is made up of 10000 avatar images. They are obtained by choosing randomly the avatar traits between 10 artworks, 4 colors and 4 proportions. The following table summarizes how the examples are distributed amongst the five possibilities for both: eye color and face shape.
+[Cartoon_set](https://google.github.io/cartoonset/download.html) dataset is made up of 10000 avatar images.Each character is defined by $18$ components including 10 artwork attributes, 4 proportion attributes and 4 colour attributes. The following table summarizes how the examples are distributed amongst the five possibilities for both: eye color and face shape.
 
 | Class | Eye color | Face shape | Eye color (no black sunglasses) |
 | ----- | --------- | ---------- | ------------------------------- |
