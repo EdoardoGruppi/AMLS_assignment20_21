@@ -41,7 +41,7 @@ Please note that the descriptions provided in this subsection are taken directly
 
 - **Cv2** is an open-source library that includes several hundreds of computer vision algorithms.
 
-- **Face_recognition** Recognize and manipulate faces with the world’s simplest face recognition library. Built from dlib’s state-of-the-art deep learning library.
+- **Face_recognition** is useful to recognize and manipulate faces with the world’s simplest face recognition library. Built from dlib’s state-of-the-art deep learning library.
 
 **Optional :**
 
