@@ -71,11 +71,38 @@ In this project, several methodologies are proposed to deal with various tasks. 
 
 **CNN model for Task A1**
 
-![image](https://user-images.githubusercontent.com/48513387/101171646-5b26ac00-3640-11eb-82ee-0b160dc1ad8f.png)
+| Layer (type)       | Output shape    | Parameters |
+|--------------------|-----------------|------------|
+| Convolutional_2D   | ( , 96, 96, 16) | 448        |
+| Convolutional_2D   | ( , 96, 96, 16) | 2320       |
+| MaxPooling_2D      | ( , 48, 48, 16) | 0          |
+| Convolutional_2D   | ( , 48, 48, 32) | 4640       |
+| Convolutional_2D   | ( , 48, 48, 32) | 9248       |
+| MaxPooling_2D      | ( , 24, 24, 32) | 0          |
+| Convolutional_2D   | ( , 24, 24, 64) | 18496      |
+| Convolutional_2D   | ( , 24, 24, 64) | 36928      |
+| BatchNormalization | ( , 24, 24, 64) | 256 (128)  |
+| MaxPooling_2D      | ( , 12, 12, 64) | 0          |
+| Flatten            | ( , 9216)       | 0          |
+| Dropout            | ( , 9216)       | 0          |
+| Dense              | ( , 2)          | 18434      |
+| Total params       |                 | 90770      |
 
 **CNN model for Task B1 and B2**
 
-![image](https://user-images.githubusercontent.com/48513387/101171854-a93baf80-3640-11eb-93c6-1f8a7ec5a3cd.png)
+| Layer (type)       | Output shape    | Parameters |
+|--------------------|-----------------|------------|
+| Convolutional_2D   | ( , 224, 224, 16) | 448        |
+| MaxPooling_2D      | ( , 112, 112, 16) | 0          |
+| Convolutional_2D   | ( , 112, 112, 32) | 4640       |
+| MaxPooling_2D      | ( , 56, 56, 32) | 0          |
+| Convolutional_2D   | ( , 56, 56, 64) | 18496      |
+| BatchNormalization | ( , 56, 56, 64) | 256 (128)  |
+| MaxPooling_2D      | ( , 28, 28, 64) | 0          |
+| Flatten            | ( , 50176)       | 0          |
+| Dropout            | ( , 50176)       | 0          |
+| Dense              | ( , 5)          | 250885     |
+| Total params       |                 | 274725      |
 
 ## Main execution
 
