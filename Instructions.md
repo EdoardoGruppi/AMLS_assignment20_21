@@ -124,8 +124,7 @@ Then, the Task A1 execution starts. Batches are prepared through the `data_prepr
 ```python
 training_batches, valid_batches, test_batches = data_preprocessing(...)
 ```
-
-![image](https://user-images.githubusercontent.com/48513387/100548250-aa00ca00-326b-11eb-8bff-6b60d54a45ad.png)
+![image](https://user-images.githubusercontent.com/48513387/101182935-148c7e00-364f-11eb-8a12-f09e4b5c682b.png)
 
 The model is therefore trained, validated and tested on the original dataset.
 
