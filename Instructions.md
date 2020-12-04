@@ -2,14 +2,14 @@
 
 ## Setup
 
-1. Install Tensorflow and all the other packages appointed in the README.md file.
+1. Install Tensorflow and all the other packages appointed in the [README.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/README.md) file.
 2. To install the face_recognition packet may be necessary to install dlib and cmake before. [At this link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508) a complete guide is provided.
-   Hence, run this command to install the package. 
+   Hence, run this command to install the package.
    ```python
    pip install face-recognition
    ```
 3. Download the project directory from [GitHub](https://github.com/EdoardoGruppi/AMLS_assignment20_21).
-4. Tensorflow enables to work directly on GPU without requiring explicity additional code. The only hardware requirement is having a Nvidia GPU card with Cuda enabled. To see if Tensorflow has detected a GPU run the following few lines.
+4. Tensorflow enables to work directly on GPU without requiring explicity additional code. The only hardware requirement is having a Nvidia GPU card with Cuda enabled. To see if Tensorflow has detected a GPU run the following few lines (see main.py).
 
    ```python
    import tensorflow as tf
@@ -19,14 +19,14 @@
    If not, there are lots of guides on the web to install everything you need. For instance, you can take a look at
    [this](https://deeplizard.com/learn/video/IubEtS2JAiY).
 
-5. Finally, it is crucial to run the code below since Tensorflow tends to allocate directly all the GPU memory even if is not entirely needed. With these lines instead, it will allocate gradually the memory needed by the program.
+5. Finally, it is crucial to run the code below since Tensorflow tends to allocate directly all the GPU memory even if is not entirely needed. With these lines instead, it will allocate gradually the memory required by the program (see main.py).
 
    ```python
    if len(physical_devices) is not 0:
       tf.config.experimental.set_memory_growth(physical_devices[0], True)
    ```
 
-   **Note:** during the several experiments conducted, each execution has needed only 0.9 GB of GPU memory. Furthermore, the instruments provided by Tensorflow make the GPU management during the execution significantly difficult. Therefore, differently from the main memory, no instructions has been written to deallocate dinamically the GPU memory. Nevertheless, if it is necessary a possible solution is proposed in the Issues Section below.
+   **Note:** during the several experiments conducted, each project execution has needed only 0.9 GB of GPU memory. Furthermore, the instruments provided by Tensorflow make the GPU management during the execution significantly difficult. Therefore, differently from the main memory, no instructions has been written to deallocate dinamically the GPU memory. Nevertheless, if it is necessary a possible solution is proposed in the Issues Section below.
 
 ## Run the code
 
@@ -42,7 +42,7 @@ python main.py
 
 ### CelebA dataset
 
-The CelebA dataset provided contains 5000 celebrity images. Each one of them is associated to two labels that describe the celebrity gender and whether they are smiling. The table below depicts how the two categories for each label are divided.
+The [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) dataset provided contains 5000 celebrity images. Each one of them is associated to two labels that describe the celebrity gender and whether they are smiling. The table below depicts how the two categories for each label are divided.
 
 | Class | Gender | Smiling |
 | ----- | ------ | ------- |
@@ -103,7 +103,7 @@ acc_A1_train, acc_A1_valid = model_A1.train(...)
 acc_A1_test = model_A1.test(...)
 ```
 
-Hence it is also tested on the second test set. Finally, memory is cleaned.
+It is also tested on the second test set. Finally, memory is cleaned.
 
 ```python
 # Test the model on the second larger test dataset provided
@@ -164,7 +164,7 @@ Once Task B1 is performed the `delete_glasses` function removes all the avatars 
 
 ![image](https://user-images.githubusercontent.com/48513387/100548328-1a0f5000-326c-11eb-9a08-b94832b642f2.png)
 
-Again the specific model follows the same process.
+Again the B2 model follows the same process.
 
 ```python
 # Build model object.

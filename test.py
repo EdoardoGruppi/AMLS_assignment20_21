@@ -1,4 +1,4 @@
-# todo delete test.py
+# todo move test.py into _additional_code
 # Import packages
 from Modules.delete_glasses import delete_glasses
 from Modules.face_extraction import smiles_extraction
@@ -21,6 +21,7 @@ if len(physical_devices) is not 0:
 data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
 test_directory, faces_not_detected1 = smiles_extraction(dataset_name='celeba_test')
 #
+# todo size 96,96 or
 training_batches, valid_batches, test_batches = data_preprocessing(data_directory='celeba', img_size=(96, 96),
                                                                    filename_column='img_name', target_column='gender',
                                                                    training_percentage_size=0.85, batches_size=16,

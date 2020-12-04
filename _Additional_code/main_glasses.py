@@ -18,7 +18,8 @@ input_shape = training_batches.image_shape
 # Build model object.
 model_ModelGlasses = ModelGlasses(input_shape)
 # Train model based on the training set (you should fine-tune your model based on validation set.)
-acc_ModelGlasses_train = model_ModelGlasses.train(training_batches, valid_batches, epochs=10, verbose=2, plot=True)
+acc_ModelGlasses_train, acc_ModelGlasses_valid = model_ModelGlasses.train(training_batches, valid_batches, epochs=10,
+                                                                          verbose=2, plot=True)
 # Used only in test.py
 model_ModelGlasses.evaluate(test_batches=test_batches, verbose=1)
 # Test model based on the test set.
