@@ -69,6 +69,14 @@ The rule of thumb followed throughout the division of both the datasets consists
 
 In this project, several methodologies are proposed to deal with various tasks. Firstly, a CNN has been designed from scratch maintaining as lower as possible the simpleness of the network along with the memory requirements and the computational time. This architecture has been then adopted to perform the gender detection task (A1) as well as, with minor amendments, the eye-color (B2) and face-shape (B1) recognition problems. Finally, a different direction has been undertaken for smile detection (A2) leveraging on the efficacy of HOG and PCA algorithms along with the simpleness of a SVM as a classifier.
 
+**CNN model for Task A1**
+
+![image](https://user-images.githubusercontent.com/48513387/101171646-5b26ac00-3640-11eb-82ee-0b160dc1ad8f.png)
+
+**CNN model for Task B1 and B2**
+
+![image](https://user-images.githubusercontent.com/48513387/101171854-a93baf80-3640-11eb-93c6-1f8a7ec5a3cd.png)
+
 ## Main execution
 
 Before the code execution, the Datasets folder must have the following structure.
