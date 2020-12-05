@@ -17,20 +17,21 @@ def plot_history(accuracy, val_accuracy, loss, val_loss, title=None):
     :param title: tile of the figure printed. default_value=None
     :return:
     """
+    x_axis = [i for i in range(1, len(accuracy)+1)]
     sn.set()
     fig = plt.figure()
     if title is not None:
         fig.suptitle(title)
     # First subplot
     plt.subplot(211)
-    plt.plot(accuracy)
-    plt.plot(val_accuracy)
+    plt.plot(x_axis, accuracy)
+    plt.plot(x_axis, val_accuracy)
     plt.ylabel('Accuracy')
     plt.legend(['Train', 'Valid'], loc='lower right')
     # Second subplot
     plt.subplot(212)
-    plt.plot(loss)
-    plt.plot(val_loss)
+    plt.plot(x_axis, loss)
+    plt.plot(x_axis, val_loss)
     plt.ylabel('Loss')
     plt.ylim(top=0.7)
     plt.xlabel('Epoch')

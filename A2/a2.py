@@ -4,9 +4,11 @@ from sklearn.metrics import accuracy_score
 from Modules.results_visualization import plot_confusion_matrix
 from numpy import array
 
+from sklearn.model_selection import GridSearchCV
+
 
 class A2:
-    def __init__(self, kernel='rbf', gamma='scale', c=1, verbose=False):
+    def __init__(self, kernel='rbf', gamma='scale', c=1, verbose=False, tol=0.001, max_iter=8000):
         """
         Defines and configures the SVM model.
 
@@ -16,8 +18,7 @@ class A2:
         :param c: regularization parameter that introduces a squared l2 penalty. default_value=1
         :param verbose: verbosity level. default_value=False
         """
-        print('Training the Support Vector Machine...')
-        self.model = SVC(kernel=kernel, gamma=gamma, C=c, verbose=verbose)
+        self.model = SVC(kernel=kernel, gamma=gamma, C=c, verbose=verbose, tol=tol, max_iter=max_iter)
 
     def train(self, x_train, x_valid, y_train, y_valid):
         """
@@ -29,6 +30,7 @@ class A2:
         :param y_valid: target values of all the validation vectors.
         :return: the accuracies measured on the training and validation sets.
         """
+        print('Training the Support Vector Machine...')
         self.model.fit(x_train, y_train)
         train_accuracy = self.model.score(x_train, y_train)
         validation_accuracy = self.model.score(x_valid, y_valid)

@@ -21,6 +21,9 @@ if len(physical_devices) is not 0:
 # data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
 # test_directory, faces_not_detected1 = smiles_extraction(dataset_name='celeba_test')
 #
+# todo delete
+acc_A1_test2, faces_not_detected1, faces_not_detected, acc_A2_test2, data_directory, acc_B1_test2 = 0, 0, 0, 0, 0, 0
+# #
 # training_batches, valid_batches, test_batches = data_preprocessing(data_directory='celeba', img_size=(96, 96),
 #                                                                    filename_column='img_name', target_column='gender',
 #                                                                    training_percentage_size=0.85, batches_size=16,
@@ -37,14 +40,13 @@ if len(physical_devices) is not 0:
 # #                                      batches_size=16, img_size=(96, 96))
 # # acc_A1_test2 = model_A1.test(test_batches, verbose=1, confusion_mesh=False)
 # # Print out your results with following format:
-# acc_A1_test2, faces_not_detected1, faces_not_detected = 0, 0, 0
 # print('TA1: {}, {}, {}, {}'.format(acc_A1_train, acc_A1_valid, acc_A1_test, acc_A1_test2))
 # # Clean up memory
 # del acc_A1_train, acc_A1_valid, acc_A1_test, model_A1, physical_devices, faces_not_detected, faces_not_detected1, \
 #     acc_A1_test2
 #
 # A2 SVM ===============================================================================================================
-# todo data_directory, variance=0.88
+# todo data_directory
 X_test, X_train, X_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocessing(dataset_name='celeba_smiles',
                                                                                     img_size=(96, 48),
                                                                                     validation_split=0.15,
@@ -61,34 +63,32 @@ acc_A2_test = model_A2.test(X_test, y_test, confusion_mesh=True)
 # x_test, y_test = test_hog_pca_preprocessing(test_directory, pca, sc, img_size=(96, 48), target_column='smiling')
 # acc_A2_test2 = model_A2.test(X_test, y_test, confusion_mesh=False)
 # Print out your results with following format:
-acc_A2_test2, data_directory = 0, 0
 print('TA2: {}, {}, {}, {}'.format(acc_A2_train, acc_A2_valid, acc_A2_test, acc_A2_test2))
 # Clean up memory
 del acc_A2_train, acc_A2_valid, acc_A2_test, X_test, X_train, X_valid, y_test, y_train, y_valid, data_directory, \
     model_A2, pca, sc, acc_A2_test2
 #
 # B1 ===================================================================================================================
-training_batches, valid_batches, test_batches = data_preprocessing(data_directory='cartoon_set',
-                                                                   filename_column='file_name',
-                                                                   target_column='face_shape', img_size=(224, 224),
-                                                                   training_percentage_size=0.8, horizontal_flip=False,
-                                                                   batches_size=16, validation_split=0.2)
-input_shape = training_batches.image_shape
-# Build model object.
-model_B1 = B1(input_shape)
-# Train model based on the training set
-acc_B1_train, acc_B1_valid = model_B1.train(training_batches, valid_batches, epochs=10, verbose=2, plot=True)
-# Test model based on the test set.
-acc_B1_test = model_B1.test(test_batches, verbose=1, confusion_mesh=True)
-# Test the model on the second larger test dataset provided
-# test_batches = test_data_preparation('cartoon_set_test', filename_column='file_name', target_column='face_shape',
-#                                      batches_size=16, img_size=(224, 224))
-# acc_B1_test2 = model_B1.test(test_batches, verbose=1, confusion_mesh=False)
-# Print out your results with following format:
-acc_B1_test2 = 0
-print('TA1: {}, {}, {}, {}'.format(acc_B1_train, acc_B1_valid, acc_B1_test, acc_B1_test2))
-# Clean up memory
-del acc_B1_train, acc_B1_valid, acc_B1_test, model_B1, acc_B1_test2
+# training_batches, valid_batches, test_batches = data_preprocessing(data_directory='cartoon_set',
+#                                                                    filename_column='file_name',
+#                                                                    target_column='face_shape', img_size=(224, 224),
+#                                                                    training_percentage_size=0.8, horizontal_flip=False,
+#                                                                    batches_size=16, validation_split=0.2)
+# input_shape = training_batches.image_shape
+# # Build model object.
+# model_B1 = B1(input_shape)
+# # Train model based on the training set
+# acc_B1_train, acc_B1_valid = model_B1.train(training_batches, valid_batches, epochs=10, verbose=2, plot=True)
+# # Test model based on the test set.
+# acc_B1_test = model_B1.test(test_batches, verbose=1, confusion_mesh=True)
+# # Test the model on the second larger test dataset provided
+# # test_batches = test_data_preparation('cartoon_set_test', filename_column='file_name', target_column='face_shape',
+# #                                      batches_size=16, img_size=(224, 224))
+# # acc_B1_test2 = model_B1.test(test_batches, verbose=1, confusion_mesh=False)
+# # Print out your results with following format:
+# print('TA1: {}, {}, {}, {}'.format(acc_B1_train, acc_B1_valid, acc_B1_test, acc_B1_test2))
+# # Clean up memory
+# del acc_B1_train, acc_B1_valid, acc_B1_test, model_B1, acc_B1_test2
 #
 # B2 ===================================================================================================================
 # To execute after the B1 Task!
@@ -113,10 +113,6 @@ del acc_B1_train, acc_B1_valid, acc_B1_test, model_B1, acc_B1_test2
 # print('TA1: {}, {}, {}, {}'.format(acc_B2_train, acc_B2_valid, acc_B2_test, acc_B2_test2))
 #
 # ======================================================================================================================
-#
-# from skimage.feature import hog, local_binary_pattern
-# lbp_feature = local_binary_pattern(img, P=8, R=1).flatten()
-# hog_feature = [*hog_feature, *lbp_feature]
 #
 # from sklearn.model_selection import GridSearchCV
 # param_grid = {'C': [0.1, 1, 10], 'gamma': [0.01, 0.001, 'scale'], 'kernel': ['rbf']}
