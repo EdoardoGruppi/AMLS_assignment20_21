@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
-from skimage.feature import hog
+from skimage.feature import hog, local_binary_pattern
 from sklearn.preprocessing import StandardScaler
 from Modules.config import *
 
@@ -157,6 +157,8 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     return x_test, x_train, x_valid, y_test, y_train, y_valid, pca, sc
 
 
+# This function was created to increase the number of examples of the training data applying data augmentation.
+# Unfortunately, the results reported show that it does not increase the generalization ability of the model.
 def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15, variance=0.95,
                                        training_size=0.85, target_column='smiling'):
     """
@@ -243,6 +245,80 @@ def hog_pca_augmentation_preprocessing(dataset_name, img_size=(96, 48), validati
     x_test = sc.transform(x_test)
     x_valid = sc.transform(x_valid)
     # Fit the model with training data and apply the dimensionality reduction on them
+    x_train = pca.fit_transform(x_train)
+    # Data is now projected on the first principal components previously extracted from the training set
+    x_valid = pca.transform(x_valid)
+    x_test = pca.transform(x_test)
+    print('Data dimensionality after PCA: {}'.format(pca.n_components_))
+    return x_test, x_train, x_valid, y_test, y_train, y_valid, pca, sc
+
+
+# This function extracts meaningful information from the images thanks to hog and lbp descriptors. The features
+# considered are standardised and then reduced by PCA algorithm.
+# Unfortunately, the results reported show that it does not increase the model performances.
+def hog_lbp_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15, variance=0.95, training_size=0.85,
+                              target_column='smiling'):
+    """
+    Given a dataset it extracts HOG and LBP features from each image.
+    Data dimensionality is then further reduced applying PCA algorithm.
+
+    :param dataset_name: name (not path) of the folder that contains the images.
+    :param img_size: image dimension after reshaping. default_value=(96,48).
+    :param target_column: name of the column in the csv file where the labels are declared. default_value='smiling'.
+    :param training_size: percentage size of the entire dataset dedicated to the training dataset. default_value=0.85.
+    :param validation_split: percentage size of the entire dataset dedicated to the validation set. default_value=0.15.
+    :param variance: the amount of variance to capture. default_value=0.95.
+    :return: dataset and labels divided in training, validation and test parts. To each image is associated
+        a reduced vector of features thanks to HOG and PCA algorithms. It returns also the pca and sc fitted on the
+        training dataset so that it can applied on separate test datasets.
+    """
+    # Create path to access to all the images
+    path = os.path.join(base_dir, dataset_name)
+    images_dir = os.path.join(path, 'img')
+    # List all the images within the folder
+    files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
+    dataset_labels = pd.read_csv(os.path.join(path, labels_filename), sep='\t', dtype='str')[target_column]
+    feature_matrix = []
+    # Counter inserted to display the execution status
+    counter = 0
+    print('\nExtracting features...')
+    for file in files:
+        counter += 1
+        img = cv2.imread(os.path.join(images_dir, file), cv2.IMREAD_GRAYSCALE)
+        # Resize the image in case it has a different size than the expected
+        img = cv2.resize(img, img_size)
+        hog_feature = hog(img, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+                          multichannel=False, feature_vector=True)
+        lbp_feature = local_binary_pattern(img, P=8, R=1).flatten()
+        feature_vector = [*hog_feature, *lbp_feature]
+        # Append the HOG features vector to the feature map
+        feature_matrix.append(feature_vector)
+        if counter % 1000 == 0:
+            print('Images processed: {}'.format(counter))
+    print('Computing PCA...')
+    print('Data dimensionality before PCA: {}'.format(len(feature_matrix[0])))
+    pca = PCA(n_components=variance)
+    # Retrieve labels of all the image processed
+    # Recall: in some images faces, i.e. smiles, are not detected
+    files = [file.split('.')[0] for file in files]
+    dataset_labels = dataset_labels.iloc[files]
+    # Labels have to be transformed in int from the string format
+    y = [int(label) for label in dataset_labels]
+    X = np.array(feature_matrix)
+    test_size = 1 - training_size
+    # Split dataset in training and test dataset
+    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
+    # Find the percentage of the training dataset that has to be dedicated to validation
+    validation_split = validation_split / training_size
+    # Divide training dataset between training and validation dataset
+    x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=validation_split)
+    # Normalize values before using PCA
+    sc = StandardScaler()
+    # Fit the StandardScaler with training data
+    x_train = sc.fit_transform(x_train)
+    x_test = sc.transform(x_test)
+    x_valid = sc.transform(x_valid)
+    # Fit the pca with training data and apply the dimensionality reduction on them
     x_train = pca.fit_transform(x_train)
     # Data is now projected on the first principal components previously extracted from the training set
     x_valid = pca.transform(x_valid)

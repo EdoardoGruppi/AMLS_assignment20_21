@@ -35,8 +35,6 @@ acc_A1_test = model_A1.test(test_batches, verbose=1, confusion_mesh=True)
 test_batches = test_data_preparation('celeba_test', filename_column='img_name', target_column='gender',
                                      batches_size=16, img_size=(96, 96))
 acc_A1_test2 = model_A1.test(test_batches, verbose=1, confusion_mesh=False)
-# Print out your results with following format:
-print('TA1: {}, {}, {}, {}'.format(acc_A1_train, acc_A1_valid, acc_A1_test, acc_A1_test2))
 # Clean up memory
 del model_A1, physical_devices, faces_not_detected, faces_not_detected1
 
@@ -47,8 +45,8 @@ X_test, X_train, X_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocess
                                                                                     variance=0.90, training_size=0.85,
                                                                                     target_column='smiling')
 # Build model object.
-# todo 0.001, 10 or 'scale',1
-model_A2 = A2(kernel='rbf', gamma=0.001, c=10, verbose=False)
+# (gamma,c) and tol values are found through grid_search.py and training_A2_plot.py (in the _Additional_code folder).
+model_A2 = A2(kernel='rbf', gamma=0.001, c=5, tol=0.1, verbose=False)
 # Train model based on the training set
 acc_A2_train, acc_A2_valid = model_A2.train(X_train, X_valid, y_train, y_valid)
 # Test model based on the test set.
