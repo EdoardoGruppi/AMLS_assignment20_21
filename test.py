@@ -1,4 +1,3 @@
-# todo move test.py into _additional_code
 # Import packages
 from Modules.delete_glasses import delete_glasses
 from Modules.face_extraction import smiles_extraction
@@ -9,6 +8,7 @@ from A2.a2 import A2
 from B1.b1 import B1
 from B2.b2 import B2
 import tensorflow as tf
+
 
 # set_memory_growth() allocates exclusively the GPU memory needed
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
@@ -21,7 +21,7 @@ if len(physical_devices) is not 0:
 # data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
 # test_directory, faces_not_detected1 = smiles_extraction(dataset_name='celeba_test')
 #
-# todo delete
+# todo delete and move to _Additional_code
 acc_A1_test2, faces_not_detected1, faces_not_detected, acc_A2_test2, data_directory, acc_B1_test2 = 0, 0, 0, 0, 0, 0
 # #
 # training_batches, valid_batches, test_batches = data_preprocessing(data_directory='celeba', img_size=(96, 96),
@@ -46,15 +46,14 @@ acc_A1_test2, faces_not_detected1, faces_not_detected, acc_A2_test2, data_direct
 #     acc_A1_test2
 #
 # A2 SVM ===============================================================================================================
-# todo data_directory
 X_test, X_train, X_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocessing(dataset_name='celeba_smiles',
                                                                                     img_size=(96, 48),
                                                                                     validation_split=0.15,
                                                                                     variance=0.90, training_size=0.85,
                                                                                     target_column='smiling')
 # Build model object.
-# todo 0.001, 10 or 'scale',1
-model_A2 = A2(kernel='rbf', gamma=0.001, c=10, verbose=False)
+# (gamma,c) and tol values are found through grid_search.py and training_A2_plot.py (in the _Additional_code folder).
+model_A2 = A2(kernel='rbf', gamma=0.001, c=5, tol=0.1, verbose=True)
 # Train model based on the training set
 acc_A2_train, acc_A2_valid = model_A2.train(X_train, X_valid, y_train, y_valid)
 # Test model based on the test set.
@@ -112,10 +111,3 @@ del acc_A2_train, acc_A2_valid, acc_A2_test, X_test, X_train, X_valid, y_test, y
 # Print out your results with following format:
 # print('TA1: {}, {}, {}, {}'.format(acc_B2_train, acc_B2_valid, acc_B2_test, acc_B2_test2))
 #
-# ======================================================================================================================
-#
-# from sklearn.model_selection import GridSearchCV
-# param_grid = {'C': [0.1, 1, 10], 'gamma': [0.01, 0.001, 'scale'], 'kernel': ['rbf']}
-# self.model = GridSearchCV(SVC(), param_grid, refit=True, verbose=2)
-# print(self.model.best_estimator_)
-# ======================================================================================================================
