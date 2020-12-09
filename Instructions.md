@@ -3,7 +3,7 @@
 ## Setup
 
 1. Install Tensorflow and all the other packages appointed in the [README.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/README.md) file.
-2. To install the face_recognition package it may be necessary to install dlib and cmake before ([at this link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508)) a complete guide is provided.
+2. To install the face_recognition package it may be necessary to install dlib and cmake before ([at this link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508) a complete guide is provided).
    Hence, run this command to install the package.
    ```python
    pip install face-recognition
