@@ -3,13 +3,13 @@
 ## Setup
 
 1. Install Tensorflow and all the other packages appointed in the [README.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/README.md) file.
-2. To install the face_recognition packet may be necessary to install dlib and cmake before. [At this link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508) a complete guide is provided.
+2. To install the face_recognition package it may be necessary to install dlib and cmake before ([at this link](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508)) a complete guide is provided.
    Hence, run this command to install the package.
    ```python
    pip install face-recognition
    ```
 3. Download the project directory from [GitHub](https://github.com/EdoardoGruppi/AMLS_assignment20_21).
-4. Tensorflow enables to work directly on GPU without requiring explicity additional code. The only hardware requirement is having a Nvidia GPU card with Cuda enabled. To see if Tensorflow has detected a GPU run the following few lines (see main.py).
+4. Tensorflow enables to work directly on GPU without requiring explicity additional code. The only hardware requirement is having a Nvidia GPU card with Cuda enabled. To see if Tensorflow has detected a GPU on your device run the following few lines (see main.py).
 
    ```python
    import tensorflow as tf
@@ -32,7 +32,7 @@
 
 Once all the necessary packages have been installed you can run the code by typing this line on the terminal.
 
-**Note:** To follow step by step the main execution take a look on the dedicated Section below.
+**Note:** To follow step by step the main execution take a look at the dedicated Section below.
 
 ```
 python main.py
@@ -72,7 +72,7 @@ In this project, several methodologies are proposed to deal with various tasks. 
 **CNN model for Task A1**
 
 | Layer (type)       | Output shape    | Parameters |
-|--------------------|-----------------|------------|
+| ------------------ | --------------- | ---------- |
 | Convolutional_2D   | ( , 96, 96, 16) | 448        |
 | Convolutional_2D   | ( , 96, 96, 16) | 2320       |
 | MaxPooling_2D      | ( , 48, 48, 16) | 0          |
@@ -90,19 +90,19 @@ In this project, several methodologies are proposed to deal with various tasks. 
 
 **CNN model for Task B1 and B2**
 
-| Layer (type)       | Output shape    | Parameters |
-|--------------------|-----------------|------------|
+| Layer (type)       | Output shape      | Parameters |
+| ------------------ | ----------------- | ---------- |
 | Convolutional_2D   | ( , 224, 224, 16) | 448        |
 | MaxPooling_2D      | ( , 112, 112, 16) | 0          |
 | Convolutional_2D   | ( , 112, 112, 32) | 4640       |
-| MaxPooling_2D      | ( , 56, 56, 32) | 0          |
-| Convolutional_2D   | ( , 56, 56, 64) | 18496      |
-| BatchNormalization | ( , 56, 56, 64) | 256 (128)  |
-| MaxPooling_2D      | ( , 28, 28, 64) | 0          |
-| Flatten            | ( , 50176)       | 0          |
-| Dropout            | ( , 50176)       | 0          |
-| Dense              | ( , 5)          | 250885     |
-| Total params       |                 | 274725      |
+| MaxPooling_2D      | ( , 56, 56, 32)   | 0          |
+| Convolutional_2D   | ( , 56, 56, 64)   | 18496      |
+| BatchNormalization | ( , 56, 56, 64)   | 256 (128)  |
+| MaxPooling_2D      | ( , 28, 28, 64)   | 0          |
+| Flatten            | ( , 50176)        | 0          |
+| Dropout            | ( , 50176)        | 0          |
+| Dense              | ( , 5)            | 250885     |
+| Total params       |                   | 274725     |
 
 ## Main execution
 
@@ -110,7 +110,7 @@ Before the code execution, the Datasets folder must have the following structure
 
 ![image](https://user-images.githubusercontent.com/48513387/100546886-065feb80-3264-11eb-97a5-fc698833878b.png)
 
-The celeba and cartoon_set folders contain the starting datasets from which training, validation and test sets are generated. The others folders instead contain a second larger test dataset provided subsequently. At the beginning the `smiles_extraction` function extracts smiles from the original celeba dataset and the final celeba test dataset. The images generated are saved in the celeba_smiles and celeba_test_smiles folders. They will be used in the Task A2.
+The celeba and cartoon_set folders contain the starting datasets from which training, validation and test sets are generated. The other folders instead contain a second larger test dataset provided subsequently. At the beginning the `smiles_extraction` function extracts smiles from the original celeba dataset and the final celeba test dataset. The images generated are saved in the celeba_smiles and celeba_test_smiles folders. They will be used in the Task A2.
 
 ```python
 data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
@@ -119,11 +119,12 @@ test_directory, faces_not_detected1 = smiles_extraction(dataset_name='celeba_tes
 
 ![image](https://user-images.githubusercontent.com/48513387/100548200-66a65b80-326b-11eb-9453-c8e02ce3042e.png)
 
-Then, the Task A1 execution starts. Batches are prepared through the `data_preprocessing` function and the original dataset is divided in train, validation and test sets. A new folder (celeba_testing) is created to contain the first test dataset.
+Then, the Task A1 execution starts. Batches are prepared through the `data_preprocessing` function and the original dataset is divided in training, validation and test sets. A new folder (celeba_testing) is created to contain the first test dataset.
 
 ```python
 training_batches, valid_batches, test_batches = data_preprocessing(...)
 ```
+
 ![image](https://user-images.githubusercontent.com/48513387/101182935-148c7e00-364f-11eb-8a12-f09e4b5c682b.png)
 
 The model is therefore trained, validated and tested on the original dataset.
