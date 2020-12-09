@@ -24,12 +24,12 @@ In this report, four distinct challenging scopes are addressed under the supervi
 
 A comprehensive guide concerning how to run the code along with additional information is provided in the file [Instruction.md](https://github.com/EdoardoGruppi/AMLS_assignment20_21/blob/main/Instructions.md).
 
-To first understand: which packages are required to the execution of the code, the role of each file or the software used read the Sections below.
+The packages required for the execution of the code along with the role of each file and the software used are described in the Sections below.
 
 ## Packages required
 
 The following lists gather all the packages needed to run the project code.
-Please note that the descriptions provided in this subsection are taken directly from the package source pages. In order to have more details on them it is reccomended to directly reference to their official sites.
+Please note that the descriptions provided in this subsection are taken directly from the package source pages. For more details it is reccomended to directly reference to their official sites.
 
 **Compulsory :**
 
@@ -69,19 +69,19 @@ Please note that the descriptions provided in this subsection are taken directly
 
 **main.py** is the starting point of the entire project. It defines the order in which instructions are realised. More precisely, it is responsible to call functions from other files in order to divide the datasets provided, pre-process images and instantiate, train and test models.
 
-**a1.py** contains the class A1 from which to instantiate the CNN model for gender detection. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
+**a1.py** contains the class A1 from which to instantiate the CNN model for gender detection. Once the model is created, it provides functions in order to be trained and evaluated and also to predict the class membership of unlabelled examples.
 
-**a2.py** contains the class A2 from which to instantiate the HOG+SVM model for smiles detection. Once the model is created, it provides functions to be trained and to predict the class membership of unlabelled examples.
+**a2.py** contains the class A2 from which to instantiate the HOG+SVM model for smiles detection. Once the model is created, it provides functions in order to be trained and to predict the class membership of unlabelled examples.
 
-**b1.py** contains the class B1 from which to instantiate the CNN model used for face-shape recognition. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
+**b1.py** contains the class B1 from which to instantiate the CNN model used for face-shape recognition. Once the model is created, it provides functions in order to be trained and evaluated and also to predict the class membership of unlabelled examples.
 
-**b2.py** contains the class B2 from which to instantiate the CNN model used for eye-color recognition. Once the model is created, it provides functions to be trained, evaluated and also to predict the class membership of unlabelled examples.
+**b2.py** contains the class B2 from which to instantiate the CNN model used for eye-color recognition. Once the model is created, it provides functions in order to be trained and evaluated and also to predict the class membership of unlabelled examples.
 
 **config.py** makes available all the global variables used in the project.
 
-**pre_processing.py** provides crucial functions related to the data preparation. `data_preprocessing`: splits the original dataset in three different parts for training, validation and testing; rescales and reshapes images; applies data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. `hog_pca_preprocessing` instead is called exclusively for Task A2. Primarily, it extracts meaningful features with the Histogram of Oriented Gradients (HOG) descriptor from a given image. Secondly, it separates datasets in three parts. Then, it standardizes features before reducing data dimensionality via the Principal Component Analysis (PCA) algorithm. The last function `hog_pca_augmentation_preprocessing` follows the process pipeline just described for Task A2 but allowing to apply data_augmentation on training images.
+**pre_processing.py** provides crucial functions related to the data preparation. `data_preprocessing`: splits the original dataset into three different parts for training, validation and testing; rescales and reshapes images; performs data augmentation; and prepares batches to feed the models. It is called in the main.py file for Tasks A1, B1 and B2. `hog_pca_preprocessing` is instead called exclusively for Task A2. Primarily, it extracts meaningful features from images by means of the Histograms of Oriented Gradients (HOG) descriptor. Secondarily, it separates datasets in three parts. Then, it standardizes features before reducing data dimensionality via the Principal Component Analysis (PCA) algorithm. The last function `hog_pca_augmentation_preprocessing` follows the process pipeline just described for Task A2 but allowing to perform data_augmentation on training images.
 
-**delete_glasses.py** includes the homonymous function to delete avatars that wear black sunglasses making not feasible the eye-color detection in the task B2. It employs a pre trained model created specifically and saved in the model_glasses directory within the Modules folder.
+**delete_glasses.py** includes the homonymous function to delete avatars that wear black sunglasses making unfeasible eye-color detection in task B2. It employs a pre trained model created specifically and saved in the model_glasses directory within the Modules folder.
 
 **face_extraction.py** leverages the external face_recognition package to extract faces or smiles through the `face_extraction` and `smiles_extraction` functions respectively. The latter is adopted during the images pre-processing of Task A2.
 
@@ -89,24 +89,21 @@ Please note that the descriptions provided in this subsection are taken directly
 
 **test_pre_processing.py** contains functions to prepare the test batches starting from the test datasets provided subsequently.
 
-**\_Additional_code folder** includes some .py files useful for the devolepment of the code and to report the most noteworthy experiments conducted during the project. In particular, `model_glasses.py`, `main_glasses.py` and `glasses_data_preparation.py` show the code employed to create from scratch the pre-trained model used to remove avatars with black glasses in Task B2 . `grid_search.py` allowed to select the optimal pair of c and gamma for the SVM model. `training_A2_plot.py` was foundamental to plot the training phase of the SVM. In general, it enables to observe when the learning phase could be interrupted. `face_net.py` and `viola_jones.py` are some alternatives taken into account to extract smiles in Task A2. `normalizing.py` could help to normalize and standardize images (featurewise) before training the models. It returns the mean and the standard deviation computed on all the images in a given folder. Finally, `test.py` was **exclusively** used as main file during the development of the code in order to preserve the structure of the official `main.py` throughout this phase. **Note:** in case you want to run one of the files within this folder although it is not necessary for the execution of the project, it could need to be moved outside the folder to work properly.
+**\_Additional_code folder** includes some .py files useful for the code devolepment as well as to report the most noteworthy experiments conducted during the project. In particular, `model_glasses.py`, `main_glasses.py` and `glasses_data_preparation.py` show the code employed to create from scratch the pre-trained model used to remove avatars with black glasses in Task B2 . `grid_search.py` allowed to select the optimal pair of c and gamma values for the SVM model. `training_A2_plot.py` was used to plot the training phase of the SVM. `face_net.py` and `viola_jones.py` are some alternatives taken into account to extract smiles in Task A2. `normalizing.py` could help to normalize and standardize images (featurewise) before training the models. It returns the mean and the standard deviation computed on all the images in a given folder. Finally, `test.py` was **exclusively** used as main file during the development of the code in order to preserve the structure of the official `main.py` throughout this phase. **Note:** to run one of the files within this folder (although it is not necessary for the execution of the project), it may be required to move it outside the folder to work properly.
 
 ## Software used
 
 > <img src="https://financesonline.com/uploads/2019/08/PyCharm_Logo1.png" width="200" alt="pycharm">
 
-PyCharm is a cross platform integrated development environment (IDE) for Python programmers. The choice
-fell on it because of its ease of use while remaining one of the most advanced working environments.
+PyCharm is an integrated development environment (IDE) for Python programmers: it was chosen because it is one of the most advanced working environments and for its ease of use.
 
 > <img src="https://camo.githubusercontent.com/9e56fd69605928b657fcc0996cebf32d5bb73c46/68747470733a2f2f7777772e636f6d65742e6d6c2f696d616765732f6c6f676f5f636f6d65745f6c696768742e706e67" width="140" alt="comet">
 
-Comet is a cloud-based machine learning platform that allows data scientists to track, compare and
-analyse experiments and models.
+Comet is a cloud-based machine learning platform that allows data scientists to track, compare and analyse experiments and models.
 
 > <img src="https://cdn-images-1.medium.com/max/1200/1*Lad06lrjlU9UZgSTHUoyfA.png" width="140" alt="colab">
 
-Google Colab is a environment that enables to run python notebook entirely in the cloud. It supports many
-popular machine learning libraries and it offers GPUs where you can execute the code as well.
+Google Colab is an environment that enables to run python notebook entirely in the cloud. It supports many popular machine learning libraries and it offers GPUs where you can execute the code as well.
 
 <!---
 ## References
