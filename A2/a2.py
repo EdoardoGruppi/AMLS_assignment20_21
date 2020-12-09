@@ -64,11 +64,11 @@ class A2:
 # Class useful to select the optimal (c, gamma) values. To have more information see the file grid_search.py
 # inside the _Additional_code folder
 class A2GridSearch:
-    def __init__(self, parameters, tol=0.001, n_jobs=None, cv=None):
+    def __init__(self, parameters, tol=0.1, n_jobs=None, cv=None):
         """
         Class that allows to search the optimal values of c and gamma from a dictionary of parameters.
 
-        :param tol: tolerance to stop the training phase. default_value=0.001
+        :param tol: tolerance to stop the training phase. default_value=0.1
         :param parameters: dictionary of parameters evaluated by the grid search algorithm if prod=False.
             default_value=None
         :param n_jobs: number of jobs to run in parallel. default_value=None means 1

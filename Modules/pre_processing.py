@@ -135,7 +135,6 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     y = [int(label) for label in dataset_labels]
     X = np.array(feature_matrix)
     test_size = 1 - training_size
-    # todo random_state=0
     # Split dataset in training and test dataset
     x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
     # Find the percentage of the training dataset that has to be dedicated to validation
