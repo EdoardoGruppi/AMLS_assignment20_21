@@ -1,4 +1,12 @@
-Datasets/
+Datasets/cartoon_set
+Datasets/cartoon_set_removed
+Datasets/cartoon_set_test
+Datasets/cartoon_set_testing
+Datasets/celeba
+Datasets/celeba_smiles
+Datasets/celeba_testing
+Datasets/celeba_test
+Datasets/celeba_test_smiles
 .idea
 c.py
 testNotebook.ipynb
