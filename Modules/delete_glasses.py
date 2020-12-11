@@ -42,6 +42,11 @@ def delete_glasses(dataset_name, img_size=(224, 224)):
             images_to_delete = np.array(np.where(predicted_labels == 1)).flatten()
             print('\nIn {} there are {} images to delete.'.format(dataset_folder.split(os.sep)[-1],
                                                                   len(images_to_delete)))
+            # Since the images in the test folder have the same name of some images in the other directories, it is
+            # necessary to create a new folder inside the removed folder specifically for the images from test_folder.
+            if folder == folders[2]:
+                removed_images = os.path.join(removed_images, 'test')
+                Path(removed_images).mkdir(parents=True, exist_ok=True)
             # Move all the files in a dedicated folder
             for i in images_to_delete:
                 shutil.move(os.path.join(images_folder, files[i]), removed_images)

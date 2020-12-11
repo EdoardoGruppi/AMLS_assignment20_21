@@ -23,7 +23,7 @@ def test_data_preparation(data_directory, filename_column, target_column, batche
     """
     # Loading the csv file
     # The sep parameter chosen according to the delimiter adopted in labels.csv
-    path = os.path.join(base_dir, data_directory + '_test')
+    path = os.path.join(base_dir, data_directory)
     test_info = pd.read_csv(os.path.join(path, labels_filename), sep='\t', dtype='str')
     # Retrieve folder where images are located
     test_dir = os.path.join(path, 'img')
@@ -50,7 +50,7 @@ def test_hog_pca_preprocessing(dataset_name, pca, standard_scaler, img_size=(96,
         features by the means of to HOG and PCA algorithms.
     """
     # Create path to access to all the images
-    path = os.path.join(base_dir, dataset_name + '_test')
+    path = os.path.join(base_dir, dataset_name)
     images_dir = os.path.join(path, 'img')
     # List all the images within the folder
     files = sorted(os.listdir(images_dir), key=lambda x: int(x.split(".")[0]))
@@ -68,10 +68,14 @@ def test_hog_pca_preprocessing(dataset_name, pca, standard_scaler, img_size=(96,
                           multichannel=False, feature_vector=True)
         # Append the HOG features vector to the feature map
         feature_matrix.append(hog_feature)
-        # Every 1000 images processed display the following output
-        if counter % 1000 == 0:
+        # Every 200 images processed display the following output
+        if counter % 200 == 0:
             print('Images processed: {}'.format(counter))
 
+    # Retrieve labels of all the image processed
+    # Note: some images faces, i.e. smiles, are not detected
+    files = [file.split('.')[0] for file in files]
+    test_labels = test_labels.iloc[files]
     # Labels have to be transformed in int from the string format
     y_test = [int(label) for label in test_labels]
     x_test = np.array(feature_matrix)

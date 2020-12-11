@@ -128,7 +128,7 @@ def hog_pca_preprocessing(dataset_name, img_size=(96, 48), validation_split=0.15
     print('Data dimensionality before PCA: {}'.format(len(feature_matrix[0])))
     pca = PCA(n_components=variance)
     # Retrieve labels of all the image processed
-    # Recall: in some images faces, i.e. smiles, are not detected
+    # Note: some images faces, i.e. smiles, are not detected
     files = [file.split('.')[0] for file in files]
     dataset_labels = dataset_labels.iloc[files]
     # Labels have to be transformed in int from the string format

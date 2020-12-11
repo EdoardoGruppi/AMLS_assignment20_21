@@ -16,10 +16,10 @@ if len(physical_devices) is not 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 # A1 ===================================================================================================================
-# # Extract smiles for A2 task before dividing all the images in 'celeba' in training and test images.
+# Extract smiles for A2 task before dividing all the images in 'celeba' in training and test images.
 data_directory, faces_not_detected = smiles_extraction(dataset_name='celeba')
 test_directory, faces_not_detected1 = smiles_extraction(dataset_name='celeba_test')
-#
+
 training_batches, valid_batches, test_batches = data_preprocessing(data_directory='celeba', img_size=(96, 96),
                                                                    filename_column='img_name', target_column='gender',
                                                                    training_percentage_size=0.85, batches_size=16,
@@ -39,7 +39,7 @@ acc_A1_test2 = model_A1.test(test_batches, verbose=1, confusion_mesh=False)
 del model_A1, physical_devices, faces_not_detected, faces_not_detected1
 
 # A2 SVM ===============================================================================================================
-X_test, X_train, X_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocessing(dataset_name=data_directory,
+x_test, x_train, x_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocessing(dataset_name=data_directory,
                                                                                     img_size=(96, 48),
                                                                                     validation_split=0.15,
                                                                                     variance=0.90, training_size=0.85,
@@ -48,14 +48,14 @@ X_test, X_train, X_valid, y_test, y_train, y_valid, pca, sc = hog_pca_preprocess
 # (gamma,c) and tol values are found through grid_search.py and training_A2_plot.py (in the _Additional_code folder).
 model_A2 = A2(kernel='rbf', gamma=0.001, c=0.5, tol=0.1, verbose=False)
 # Train model based on the training set
-acc_A2_train, acc_A2_valid = model_A2.train(X_train, X_valid, y_train, y_valid)
+acc_A2_train, acc_A2_valid = model_A2.train(x_train, x_valid, y_train, y_valid)
 # Test model based on the test set.
-acc_A2_test = model_A2.test(X_test, y_test, confusion_mesh=True)
+acc_A2_test = model_A2.test(x_test, y_test, confusion_mesh=True)
 # Test the model on the second larger test dataset provided
 x_test, y_test = test_hog_pca_preprocessing(test_directory, pca, sc, img_size=(96, 48), target_column='smiling')
-acc_A2_test2 = model_A2.test(X_test, y_test, confusion_mesh=False)
+acc_A2_test2 = model_A2.test(x_test, y_test, confusion_mesh=False)
 # Clean up memory
-del X_test, X_train, X_valid, y_test, y_train, y_valid, data_directory, model_A2, pca, sc
+del x_test, x_train, x_valid, y_test, y_train, y_valid, data_directory, model_A2, pca, sc
 
 # B1 ===================================================================================================================
 training_batches, valid_batches, test_batches = data_preprocessing(data_directory='cartoon_set',
@@ -76,11 +76,11 @@ test_batches = test_data_preparation('cartoon_set_test', filename_column='file_n
 acc_B1_test2 = model_B1.test(test_batches, verbose=1, confusion_mesh=False)
 
 # B2 ===================================================================================================================
-# To execute after the B1 Task!
+# Execute after the B1 Task
 delete_glasses(dataset_name='cartoon_set', img_size=(224, 224))
 training_batches, valid_batches, test_batches = data_preprocessing(data_directory='cartoon_set',
                                                                    filename_column='file_name',
-                                                                   target_column='eye_color',
+                                                                   target_column='eye_color', img_size=(224, 224),
                                                                    training_percentage_size=0.8, batches_size=16,
                                                                    horizontal_flip=False, validation_split=0.2)
 input_shape = training_batches.image_shape
@@ -91,7 +91,7 @@ acc_B2_train, acc_B2_valid = model_B2.train(training_batches, valid_batches, epo
 # Test model based on the test set.
 acc_B2_test = model_B2.test(test_batches, verbose=1, confusion_mesh=True)
 # Test the model on the second larger test dataset provided
-test_batches = test_data_preparation('cartoon_set_test', filename_column='file_name', target_column='face_shape',
+test_batches = test_data_preparation('cartoon_set_test', filename_column='file_name', target_column='eye_color',
                                      batches_size=16, img_size=(224, 224))
 acc_B2_test2 = model_B2.test(test_batches, verbose=1, confusion_mesh=False)
 
